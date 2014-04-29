@@ -17,4 +17,7 @@
 //= require react_ujs
 
 //= require bootstrap
+
+//= require go
+
 //= require_tree .

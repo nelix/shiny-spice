@@ -134,40 +134,6 @@ var Grabbable = React.createClass({
 });
 
 
-var StackieRectKeeperMixin = {
-  childRects: {},
-  getInitialState: function() {
-    return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null};
-  },
-
-  handleRect: function(component, rect, columnKey) {
-    this.childRects[component.props.key] = {component: component, rect: rect, itemKey: component.props.key, columnKey: columnKey};
-  },
-
-  handleMove: function(e) {
-    var matchKey = null;
-    $.each(this.childRects, function(key, rect) {
-      if (!rect.component.state.dragging && rect.component.isEventInRect(e, rect.rect)) {
-        this.setState({overItemKey: rect.itemKey, overColumnKey: rect.columnKey, overItemPosition: rect.component.props.position});
-      }
-    }.bind(this));
-
-
-    this.props.onGrabOver && this.props.onGrabOver(this.state.dragItemKey, this.state.overItemKey, this.state.overColumnKey);
-  },
-
-  handleGrab: function(colId, key) {
-    this.setState({dragItemKey: key});
-    window.addEventListener('mousemove', this.handleMove);
-  },
-
-  handleDrop: function(key) {
-    if (this.state.dragItemKey !== false && this.state.overItemPosition !== false && this.state.overColumnKey !== false && this.state.overItemPosition !== null) this.handleSort(this.state.dragItemKey, this.state.overItemPosition, this.state.overColumnKey);
-    this.setState({dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null});
-    window.removeEventListener('mousemove', this.handleMove);
-  },
-};
-
 var Stackable = React.createClass({
 
   propTypes: {
@@ -183,14 +149,16 @@ var Stackable = React.createClass({
   },
 
   render: function() {
+    console.log('start')
     var items = this.props.children.map(function joinChildWithGrabbable(child, i) {
+      console.log(child.props.text)
       var grabbableChild = <Grabbable position={i} key={child.props.key} onGrab={this.props.onGrab.bind(null, child.props.key)} onDrop={this.props.onDrop.bind(null, child.props.key)} onRect={this.handleRect} onClick={this.handleClick}>{child}</Grabbable>;
       return grabbableChild;
     },this);
-
+    console.log('end col')
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
-        <br/>
+        <br key={'dwdwdwdwd'}/>
       );
     }
     return <div className="sortie-column">{items}</div>;

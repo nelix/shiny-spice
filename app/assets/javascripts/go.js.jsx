@@ -14,90 +14,16 @@ var items = [
   {id: 10, text: 'A snake? I dunno.'}
 ];
 
-function find(needle, haystack, attr) {
-  attr = attr || 'id';
-
-  return (haystack || []).filter(
-    function(hay) {
-      return (needle === hay[attr]);
-    }
-  )[0];
-}
-
-function findIndex(needle, haystack, attr) {
-  attr = attr || 'id';
-  var index;
-
-  (haystack || []).forEach(
-    function(hay, ind) {
-      if (needle === hay[attr]) index = ind;
-    }
-  );
-  return index;
-}
-
-function findItem(id, columns) {
-
-}
-
-var MyBoard = React.createClass({
-
-  mixins: [StackieRectKeeperMixin],
-
-  getItems: function(ids) {
-    return ids.map(
-      function(id) {
-        var item = find(id, this.props.items)
-        return this.props.itemBuilder ? this.props.itemBuilder(item) : item;
-      },this
-    );
-  },
-
-  handleSort: function(itemId, position, columnId) {
-    var columns = this.props.columns;
-
-    columns.forEach(
-      function(column) {
-        if (column.items.indexOf(itemId) !== -1) {
-          column.items.splice(column.items.indexOf(itemId), 1);
-        }
-      }
-    );
-
-    var columnIndex = findIndex(columnId, columns);
-    var newColItems = columns[columnIndex].items;
-
-    newColItems.splice(position, 0, itemId);
-
-    this.setProps({columns: columns});
-  },
-
-  buildColumn: function(column) {
-    var items = this.getItems(column.items);
-    return <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>
-  },
-
-  render: function() {
-    var columns = this.props.columns.map(this.buildColumn, this);
-    return (
-      <div className="boardie cf">
-        {columns}
-      </div>
-    );
-  }
-});
-
 function buildTest(data) {
-  console.log('itemkey', data.id)
   return <TestBox key={data.id} text={data.text}/>;
 }
 
 function log() {
-  console.log(arguments)
+  console.log(arguments[0])
 }
 
 function go() {
 React.renderComponent(
- <MyBoard onGrabOver={log} columns={columns} items={items} itemBuilder={buildTest}/>,
+ <Boardie onGrabOver={log} columns={columns} items={items} itemBuilder={buildTest}/>,
   document.body);
 }
