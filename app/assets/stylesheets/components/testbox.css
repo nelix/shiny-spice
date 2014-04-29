@@ -1,0 +1,19 @@
+.testbox {
+    width: 150px;
+    height: 80px;
+    background: #FA0;
+    margin: 5px;
+    border-radius: 4px;
+}
+.grabie-grabbing > .testbox {
+    background: #0AF;
+    opacity: 0.8;
+    transform: matrix(1, 0.2, 0, 1, 0, 0);
+    -webkit-filter: blur(0.1px);
+}
+.grabie-grabover > .testbox {
+    background: #DAF;
+}
+.testbox:hover {
+    background: #0AF;
+}

@@ -1,0 +1,12 @@
+.grabie-grabbable {
+    -webkit-backface-visibility: hidden;
+    cursor: -webkit-grab;
+    z-index: 1;
+}
+
+.grabie-grabbable.grabie-grabbing {
+    user-select: none;
+    -webkit-backface-visibility: hidden;
+    cursor: -webkit-grabbing;
+    z-index: 2;
+}
