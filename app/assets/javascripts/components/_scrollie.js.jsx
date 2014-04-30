@@ -85,8 +85,7 @@ var Scrollie = React.createClass({
       }
 
     } else if (this.state.scrollable) {
-        this.setState({scrollable: false});
-      }
+      this.setState({scrollable: false});
     }
   },
 
@@ -104,11 +103,11 @@ var Scrollie = React.createClass({
   handleMouseUp: function(mouse) {
     window.removeEventListener('mousemove', this.handleMouseMove);
     this.setState({scrolling: false});
-    document.body.className = this.bodyClass;
+    document.body.className = this.bodyClass; // TODO: need to do something more specific
   },
 
   handleMouseMove: function(e) {
-    var mouseDelta = this.startMouseY - e.pageY
+    var mouseDelta = this.startMouseY - e.pageY;
     this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.scrollieItemsHeight / this.scrollieWrapperHeight));
   },
 
