@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 
 var columns = [
-  {id: 2, title: 'hats', items: [4, 5, 6]},
+  {id: 2, title: 'hats', items: [4, 5, 6, 7, 8]},
   {id: 3, title: 'fake hats', items: [9, 10]}
 ];
 
@@ -9,6 +9,8 @@ var items = [
   {id: 4, text: 'Fedora'},
   {id: 5, text: 'Pork Pie'},
   {id: 6, text: 'Bowler'},
+  {id: 7, text: 'Snap back'},
+  {id: 8, text: 'Flat brim'},
 
   {id: 9, text: 'Panama'},
   {id: 10, text: 'A snake? I dunno.'}
@@ -72,9 +74,14 @@ var MyBoard = React.createClass({
     this.setProps({columns: columns});
   },
 
+  as: function() {
+    return <span>asdf</span>;
+  },
+
   buildColumn: function(column) {
     var items = this.getItems(column.items);
-    return <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>
+    var column = <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>;
+    return column.attachScrollie(column);
   },
 
   render: function() {
