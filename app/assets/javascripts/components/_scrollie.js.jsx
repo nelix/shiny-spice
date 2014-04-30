@@ -116,9 +116,13 @@ var Scrollie = React.createClass({
   render: function() {
     var scrollie = this.props.options;
 
-    var thumbStyle = this.props.style || {};
-        thumbStyle['height'] = this.state.scrollbarHeight;
-        thumbStyle[transformProperty] = 'translate(0px, ' + this.state.scrollbarOffset + 'px)';
+    var thumbStyle = this.props.style || {height: this.state.scrollbarHeight};
+
+    if (transformProperty) {
+      thumbStyle[transformProperty] = translate(0, this.state.scrollbarOffset);
+    } else {
+      thumbStyle.top = this.state.scrollbarOffset;
+    }
 
     if (this.state.scrollable) {
       return (
