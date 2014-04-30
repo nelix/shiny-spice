@@ -13,7 +13,7 @@ var Scrollie = React.createClass({
       scrollable: false,
       scrolling: false,
       scrollbarHeight: 0,
-      scrollbarOffset: 0
+      scrollbarOffset: this.props.options.verticalOffset
     };
   },
 
@@ -45,7 +45,7 @@ var Scrollie = React.createClass({
     var scrollbarOffset = (scrollAmount / this.scrollieItemsHeight) * (this.scrollieWrapperHeight);
 
     this.setState({
-      scrollbarOffset: scrollbarOffset,
+      scrollbarOffset: scrollbarOffset + this.props.options.verticalOffset,
       nativeScrollbarOffset: scrollAmount
     });
   },
@@ -54,12 +54,12 @@ var Scrollie = React.createClass({
     var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
     var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
     var scrollieItems = this.refs.scrollieItems.getDOMNode();
-    var scrollbarHeight = scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight);
+    var scrollbarHeight = (scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight)) - (this.props.options.verticalOffset * 2);
     var scrollbarOffset = scrollieWrapper.scrollTop;
     this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
 
     var pendingState = {};
-    // Check the top offset, larguly used for updating component
+    // Check the top offset, largly used for updating component
     if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
         pendingState.scrollbarOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
     }
@@ -157,7 +157,8 @@ var Scrollie = React.createClass({
 var ScrollieMixin = {
   attachScrollie: function(component, parameters) {
     var defaults = {
-      prefix: 'scrollie'
+      prefix: 'scrollie',
+      verticalOffset: 0
     };
 
     var options = extend(defaults, parameters)
