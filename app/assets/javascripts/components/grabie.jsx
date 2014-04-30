@@ -141,7 +141,7 @@ var Grabbable = React.createClass({
 
 var Stackable = React.createClass({
 
-  //mixins: [ScrollieMixin],
+  mixins: [ScrollieMixin],
 
   propTypes: {
     children: React.PropTypes.arrayOf(React.PropTypes.component).isRequired
@@ -166,6 +166,6 @@ var Stackable = React.createClass({
         <span className="grabbie-placeholder" key={'gap'}></span>
       );
     }
-    return <div className="sortie-column">{items}</div>;
+    return this.attachScrollie(<div className="sortie-column">{items}</div>);
   }
 });

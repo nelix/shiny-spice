@@ -73,7 +73,7 @@ var StackieRectKeeperMixin = {
 
 var Boardie = React.createClass({
 
-  mixins: [StackieRectKeeperMixin, ScrollieMixin],
+  mixins: [StackieRectKeeperMixin],
 
   getItems: function(ids) {
     return ids.map(
@@ -108,7 +108,7 @@ var Boardie = React.createClass({
   buildColumn: function(column) {
     var items = this.getItems(column.items);
     var column = <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>
-    return this.attachScrollie(column);
+    return column;
   },
 
   render: function() {
