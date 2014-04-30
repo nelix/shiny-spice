@@ -141,7 +141,7 @@ var Grabbable = React.createClass({
 
 var Stackable = React.createClass({
 
-  mixins: [ScrollieMixin],
+  //mixins: [ScrollieMixin],
 
   propTypes: {
     children: React.PropTypes.arrayOf(React.PropTypes.component).isRequired
