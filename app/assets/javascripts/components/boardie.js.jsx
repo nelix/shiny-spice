@@ -23,6 +23,14 @@ function findIndex(needle, haystack, attr) {
   return index;
 }
 
+function mouseOverBottomHalf(e, rect) {
+  var clientYRel = e.pageY - rect.top //- e.currentTarget.scrollTop;
+
+  var isTop = (clientYRel <  rect.height/2);
+
+  return !isTop;
+}
+
 var StackieRectKeeperMixin = {
   childRects: {},
   getInitialState: function() {
@@ -37,8 +45,10 @@ var StackieRectKeeperMixin = {
     var matchKey = null;
     $.each(this.childRects, function(key, rect) {
       if (!rect.component.state.dragging && rect.component.isEventInRect(e, rect.rect)) {
-        if ((this.state.overItemKey !== rect.itemKey) || (this.state.overColumnKey !== rect.columnKey) || (this.state.overItemPosition !== rect.component.props.position)) {
-          this.setState({overItemKey: rect.itemKey, overColumnKey: rect.columnKey, overItemPosition: rect.component.props.position});
+        var position = rect.component.props.position;
+        mouseOverBottomHalf(e, rect.rect) && position++
+        if ((this.state.overItemKey !== rect.itemKey) || (this.state.overColumnKey !== rect.columnKey) || (this.state.overItemPosition !== position)) {
+          this.setState({overItemKey: rect.itemKey, overColumnKey: rect.columnKey, overItemPosition: position});
           this.props.onGrabOver && this.props.onGrabOver(this.state);
         }
       }
