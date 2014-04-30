@@ -42,7 +42,7 @@ var Scrollie = React.createClass({
   handleScroll: function(scrollEvent) {
       var scrollAmount = scrollEvent.target.scrollTop;
 
-      var scrollbarOffset = (scrollAmount / this.childrenHeight) * (this.wrapperHeight);
+      var scrollbarOffset = (scrollAmount / this.scrollieItemsHeight) * (this.scrollieWrapperHeight);
 
       this.setState({
           scrollbarOffset: scrollbarOffset,
@@ -51,23 +51,23 @@ var Scrollie = React.createClass({
   },
 
   createScrollbar: function() {
-      var scrollWrapper = this.refs.scrollWrapper.getDOMNode();
-      var listWrapper = this.refs.listWrapper.getDOMNode();
-      var children = this.refs.children.getDOMNode();
-      var scrollbarHeight = scrollWrapper.clientHeight * (scrollWrapper.clientHeight / children.clientHeight);
-      var scrollbarOffset = scrollWrapper.scrollTop;
-      this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollWrapper);
+      var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
+      var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
+      var scrollieItems = this.refs.scrollieItems.getDOMNode();
+      var scrollbarHeight = scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight);
+      var scrollbarOffset = scrollieWrapper.scrollTop;
+      this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
 
       // Check the top offset, larguly used for updating component
-      if (this.childrenHeight && (this.childrenHeight !== children.clientHeight)) {
-          this.setState({scrollbarOffset: (scrollbarOffset / children.clientHeight) * (scrollWrapper.clientHeight)})
+      if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
+          this.setState({scrollbarOffset: (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight)})
       }
 
-      this.childrenHeight = children.clientHeight;
-      this.wrapperHeight = scrollWrapper.clientHeight;
+      this.scrollieItemsHeight = scrollieItems.clientHeight;
+      this.scrollieWrapperHeight = scrollieWrapper.clientHeight;
 
       // Check if we should add some scrolls
-      if (children.clientHeight > scrollWrapper.clientHeight) {
+      if (scrollieItems.clientHeight > scrollieWrapper.clientHeight) {
           if (this.state.scrollbarHeight !== scrollbarHeight) {
               this.setState({scrollbarHeight: scrollbarHeight});
           }
@@ -75,12 +75,12 @@ var Scrollie = React.createClass({
           // Scrolls are required, check if they dont exist
           if (!this.state.scrollable) {
               this.setState({scrollable: true});
-              this.hideNativeScrollbar(scrollWrapper);
+              this.hideNativeScrollbar(scrollieWrapper);
           };
 
 
           if (this.state.nativeScrollbarOffset !== scrollbarOffset) {
-              newScrollOffset = (scrollbarOffset / children.clientHeight) * (scrollWrapper.clientHeight);
+              newScrollOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
               this.setState({scrollbarOffset: newScrollOffset, nativeScrollbarOffset: scrollbarOffset});
           }
 
@@ -96,7 +96,7 @@ var Scrollie = React.createClass({
       window.addEventListener('mousemove', this.handleMouseMove);
       window.addEventListener('mouseup', this.handleMouseUp);
       this.startMouseY = mouse.nativeEvent.pageY;
-      this.startScrollbarOffset = this.refs.scrollWrapper.getDOMNode().scrollTop;
+      this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
       this.setState({scrolling: true});
       this.bodyClass = document.body.className;
       document.body.className = this.bodyClass + ' no-select';
@@ -110,7 +110,7 @@ var Scrollie = React.createClass({
 
   handleMouseMove: function(e) {
       var mouseDelta = this.startMouseY - e.pageY
-      this.refs.scrollWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.childrenHeight / this.wrapperHeight));
+      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.scrollieItemsHeight / this.scrollieWrapperHeight));
   },
 
   render: function() {
@@ -122,22 +122,22 @@ var Scrollie = React.createClass({
 
     if (this.state.scrollable) {
       return (
-        <div ref="listWrapper" className={scrollie.prefix + '-container'} onScroll={this.handleScroll}>
-          <div ref="scrollWrapper" className={scrollie.prefix + '-wrapper'} style={this.state.wrapperStyle}>
-            <div className="children" ref="children">
+        <div ref="scrollieContainer" className={scrollie.prefix + '-container'} onScroll={this.handleScroll}>
+          <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'} style={this.state.wrapperStyle}>
+            <div ref="scrollieItems" className={scrollie.prefix + '-items'}>
               {this.props.children}
             </div>
           </div>
-          <div className="scrollbar">
-              <div className="scrollbar-thumb" style={thumbStyle} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}></div>
+          <div className={scrollie.prefix + '-scrollbar'}>
+              <div className={scrollie.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}></div>
           </div>
         </div>
       );
     } else {
       return (
-        <div ref="listWrapper" className={scrollie.prefix + '-container'}>
-          <div ref="scrollWrapper" className={scrollie.prefix + '-wrapper'}>
-            <div className="children" ref="children">
+        <div ref="scrollieContainer" className={scrollie.prefix + '-container'}>
+          <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'}>
+            <div className={scrollie.prefix + '-items'} ref="scrollieItems">
               {this.props.children}
             </div>
           </div>
