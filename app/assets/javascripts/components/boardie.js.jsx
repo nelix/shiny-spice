@@ -53,9 +53,6 @@ var StackieRectKeeperMixin = {
         }
       }
     }.bind(this));
-
-
-
   },
 
   handleGrab: function(colId, key) {

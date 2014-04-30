@@ -14,11 +14,11 @@ var GrabMouseMixin = {
   grabStyle: function() {
     var style = this.props.style || {};
 
-    style['position'] = 'relative';
+    //style['position'] = 'relative';
 
     if (this.state.dragging) {
-      var x = this.state.grabX - this.state.grabStartX;
-      var y = this.state.grabY - this.state.grabStartY;
+      var x = this.state.grabX //- this.state.grabStartX; TODO: use the start pos to work out where on the box it grabbed
+      var y = this.state.grabY //- this.state.grabStartY;
       if (transformProperty) {
         style[transformProperty] = translate(x,y);
       } else {
@@ -121,6 +121,18 @@ var RectMixin = {
   }
 };
 
+var Grabber = React.createClass({
+  mixins: [LayeredComponentMixin],
+  propTypes: {
+    children: React.PropTypes.component.isRequired
+  },
+  renderLayer: function() {
+    var style = this.props.styles;
+    return <div style={style} className="grabie-grabbable grabie-grabbing">{React.Children.only(this.props.children)}</div>;
+  },
+  render: function() {return <span style={{display:'none'}}/>}
+});
+
 var Grabbable = React.createClass({
   mixins: [GrabMouseMixin, RectMixin],
 
@@ -129,12 +141,14 @@ var Grabbable = React.createClass({
   },
 
   render: function () {
-    var style = this.grabStyle();
+    if (!this.state.dragging) {
+      return this.transferPropsTo(
+        <div className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
+      );
+    } else {
+      return <Grabber styles={this.grabStyle()}>{React.Children.only(this.props.children)}</Grabber>
+    }
 
-    var className = 'grabie-grabbable' + (this.state.dragging ? ' grabie-grabbing' : '');
-    return this.transferPropsTo(
-      <div onClick={null} style={style} className={className}>{React.Children.only(this.props.children)}</div>
-    );
   }
 });
 

@@ -25,6 +25,9 @@ function buildTest(data) {
   return <TestBox key={data.id} text={data.text}/>;
 }
 
+function go2() {
+  React.renderComponent(<DragieOverlay />, document.body);
+}
 function go() {
 React.renderComponent(
  <Boardie  columns={columns} items={items} itemBuilder={buildTest}/>,
