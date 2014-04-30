@@ -30,8 +30,8 @@ var GrabMouseMixin = {
     return style;
   },
 
-  handleMouseUp: function (e) {
-    window.removeEventListener('mouseup', this.handleMouseUp);
+  handleGrabieMouseUp: function (e) {
+    window.removeEventListener('mouseup', this.handleGrabieMouseUp);
     this.state.dragging && this.setState({dragging: false});
 
     if (this.mightClick) {
@@ -42,7 +42,7 @@ var GrabMouseMixin = {
     }
   },
 
-  handleMouseMove: function (e) {
+  handleGrabieMouseMove: function (e) {
     if (!this.mightClick && this.state.dragging) {
       this.state.dragging && this.setState({
         grabX: e.pageX,
@@ -51,13 +51,13 @@ var GrabMouseMixin = {
     }
   },
 
-  handleMouseDown: function (e) {
+  handleGrabieMouseDown: function (e) {
     var button = e.button;
     if (button && (button !== 0 && button !== 1)) {
       return;
     }
 
-    window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener('mouseup', this.handleGrabieMouseUp);
     this.mightClick = true;
     setTimeout(
       function() {
@@ -82,24 +82,24 @@ var GrabMouseMixin = {
 
   // Lifecycle
   componentDidMount: function() {
-    this.getDOMNode().addEventListener('mousedown', this.handleMouseDown);
+    this.getDOMNode().addEventListener('mousedown', this.handleGrabieMouseDown);
   },
 
   componentWillUnmount: function() {
-    this.getDOMNode().removeEventListener('mousedown', this.handleMouseDown);
+    this.getDOMNode().removeEventListener('mousedown', this.handleGrabieMouseDown);
   },
 
   componentDidUpdate: function () {
     if (this.state.dragging && !this.dragEventsAttached) {
-      this.dragEventsAttached = true;
-      window.addEventListener('mousemove', this.handleMouseMove);
+      this.grabieEventsAttached = true;
+      window.addEventListener('mousemove', this.handleGrabieMouseMove);
     }
   },
 
   componentWillUpdate: function (nextProps, nextState) {
     if (!nextState.dragging && this.dragEventsAttached) {
-      this.dragEventsAttached = false;
-      window.removeEventListener('mousemove', this.handleMouseMove);
+      this.grabieEventsAttached = false;
+      window.removeEventListener('mousemove', this.handleGrabieMouseMove);
     }
   }
 
@@ -160,7 +160,7 @@ var Stackable = React.createClass({
     },this);
     var placeStyle = {display: 'block', height: '10px'}
     placeStyle[getStyleProperty('box-shadow')] = '3px 3px 5px 6px #ccc';
-    
+
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
         <span style={placeStyle} key={'gap'}></span>
