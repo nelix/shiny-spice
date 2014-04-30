@@ -58,9 +58,10 @@ var Scrollie = React.createClass({
     var scrollbarOffset = scrollieWrapper.scrollTop;
     this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
 
+    var pendingState = {};
     // Check the top offset, larguly used for updating component
     if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
-        this.setState({scrollbarOffset: (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight)})
+        pendingState.scrollbarOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
     }
 
     this.scrollieItemsHeight = scrollieItems.clientHeight;
@@ -69,23 +70,28 @@ var Scrollie = React.createClass({
     // Check if we should add some scrolls
     if (scrollieItems.clientHeight > scrollieWrapper.clientHeight) {
       if (this.state.scrollbarHeight !== scrollbarHeight) {
-        this.setState({scrollbarHeight: scrollbarHeight});
+        pendingState.scrollbarHeight = scrollbarHeight;
       }
 
       // Scrolls are required, check if they dont exist
       if (!this.state.scrollable) {
-        this.setState({scrollable: true});
-        this.hideNativeScrollbar(scrollieWrapper);
+        pendingState.scrollable = true;
+        pendingState.wrapperStyle = {right: this.nativeScrollbarWidth};
+
       }
 
 
       if (this.state.nativeScrollbarOffset !== scrollbarOffset) {
         newScrollOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
-        this.setState({scrollbarOffset: newScrollOffset, nativeScrollbarOffset: scrollbarOffset});
+        pendingScrollbarOffset = newScrollOffset;
+        pendingState.nativeScrollbarOffset = scrollbarOffset;
       }
 
     } else if (this.state.scrollable) {
-      this.setState({scrollable: false});
+      pendingState.scrollable = false;
+    }
+    if (Object.keys(pendingState).length > 0) {
+      this.setState(pendingState);
     }
   },
 
