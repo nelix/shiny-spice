@@ -66,11 +66,6 @@ var Scrollie = React.createClass({
       this.childrenHeight = children.clientHeight;
       this.wrapperHeight = scrollWrapper.clientHeight;
 
-      console.log({
-        childrenHeight: this.childrenHeight,
-        wrapperHeight: this.wrapperHeight
-      })
-
       // Check if we should add some scrolls
       if (children.clientHeight > scrollWrapper.clientHeight) {
           if (this.state.scrollbarHeight !== scrollbarHeight) {
@@ -94,6 +89,28 @@ var Scrollie = React.createClass({
               this.setState({scrollable: false});
           }
       };
+  },
+
+  // Mouse events
+  handleMouseDown: function(mouse) {
+      window.addEventListener('mousemove', this.handleMouseMove);
+      window.addEventListener('mouseup', this.handleMouseUp);
+      this.startMouseY = mouse.nativeEvent.pageY;
+      this.startScrollbarOffset = this.refs.scrollWrapper.getDOMNode().scrollTop;
+      this.setState({scrolling: true});
+      this.bodyClass = document.body.className;
+      document.body.className = this.bodyClass + ' no-select';
+  },
+
+  handleMouseUp: function(mouse) {
+      window.removeEventListener('mousemove', this.handleMouseMove);
+      this.setState({scrolling: false});
+      document.body.className = this.bodyClass;
+  },
+
+  handleMouseMove: function(e) {
+      var mouseDelta = this.startMouseY - e.pageY
+      this.refs.scrollWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.childrenHeight / this.wrapperHeight));
   },
 
   render: function() {
