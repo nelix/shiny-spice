@@ -36,7 +36,7 @@ var Scrollie = React.createClass({
   },
 
   getNativeScrollbarWidth: function(scrollableElement) {
-    return scrollableElement.offsetWidth - scrollableElement.clientWidth;
+    return -Math.abs(scrollableElement.offsetWidth - scrollableElement.clientWidth);
   },
 
   handleScroll: function(scrollEvent) {
@@ -77,7 +77,6 @@ var Scrollie = React.createClass({
       if (!this.state.scrollable) {
         pendingState.scrollable = true;
         pendingState.wrapperStyle = {right: this.nativeScrollbarWidth};
-
       }
 
 
