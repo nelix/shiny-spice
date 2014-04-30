@@ -5,16 +5,15 @@
 
   .sortie-column {
     width: 100%;
-    background: #FFEE94;
-
-    .testbox {
-      background: #00CAE8;
-      width: 90%;
-      margin: 10px 5%;
-      color: #FFF; padding: 1.5em;
-      text-align: center;
-    }
   }
+}
+
+.testbox {
+  background: #00CAE8;
+  width: 90%;
+  margin: 10px 5%;
+  color: #FFF; padding: 1.5em;
+  text-align: center;
 }
 
 $prefix: 'scrollie';
@@ -26,6 +25,10 @@ body, html {height: 100%; min-height: 100%;}
   float: left;
   width: 29%;
   margin: 0 2%;
+}
+
+.#{$prefix}-wrapper {
+  background: #FFEE94;
 }
 
 .#{$prefix}-scrollbar-thumb {

@@ -1,8 +1,9 @@
 .testbox {
-    width: 150px;
-    height: 80px;
-    background: #FA0;
-    margin: 5px;
+    background: #00CAE8;
+    width: 90%;
+    margin: 10px 5%;
+    color: #FFF; padding: 1.5em;
+    text-align: center;
     border-radius: 4px;
 }
 .grabie-grabbing > .testbox {
