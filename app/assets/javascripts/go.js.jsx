@@ -3,7 +3,7 @@
 var columns = [
   {id: 2, title: 'hats', items: [4, 5, 6]},
   {id: 3, title: 'fake hats', items: [9, 10]},
-  {id: 4, title: 'I dunno, crabs?', items: [14, 15, 16]}
+  {id: 4, title: 'I dunno, crabs?', items: [14, 15, 16, 17, 18]}
 ];
 
 var items = [
@@ -16,6 +16,8 @@ var items = [
 
   {id: 14, text: 'Cat skin'},
   {id: 15, text: 'Rabit Skin'},
+  {id: 17, text: 'Rabit Skin'},
+  {id: 18, text: 'Rabit Skin'},
   {id: 16, text: 'Space needle?'}
 ];
 

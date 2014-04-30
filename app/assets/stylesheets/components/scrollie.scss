@@ -17,38 +17,15 @@
   }
 }
 
-// Scrollie specific:
-body, html {height: 100%; min-height: 100%;}
-
 $prefix: 'scrollie';
 
+// Scrollie styling
+body, html {height: 100%; min-height: 100%;}
+
 .#{$prefix}-container {
-  position: relative;
-  overflow: hidden;
   float: left;
   width: 29%;
   margin: 0 2%;
-  height: 100%;
-}
-
-.#{$prefix}-wrapper {
-  overflow: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-
-.#{$prefix}-items {
-  overflow: hidden;
-}
-
-.#{$prefix}-scrollbar {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
 }
 
 .#{$prefix}-scrollbar-thumb {
@@ -71,7 +48,41 @@ $prefix: 'scrollie';
     opacity: 0.7;
 }
 
-.no-select {
+
+// Scrollie required:
+
+.#{$prefix}-container ::-webkit-scrollbar { 
+    display: none; 
+}
+
+.#{$prefix}-container {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.#{$prefix}-wrapper {
+  overflow: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.#{$prefix}-items {
+  overflow: hidden;
+}
+
+.#{$prefix}-scrollbar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+body.no-select {
     webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
