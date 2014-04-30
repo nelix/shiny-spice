@@ -110,6 +110,11 @@ var RectMixin = {
     return (e.pageX >= rect.left && e.pageX <= rect.right) && (e.pageY >= rect.top && e.pageY <= rect.bottom);
   },
 
+  componentDidUpdate: function() {
+    this.rect = getBounds(this.getDOMNode());
+    this.props.onRect && this.props.onRect(this, this.rect);
+  },
+
   componentDidMount: function() {
     this.rect = getBounds(this.getDOMNode());
     this.props.onRect && this.props.onRect(this, this.rect);
@@ -153,7 +158,7 @@ var Stackable = React.createClass({
       var grabbableChild = <Grabbable position={i} key={child.props.key} onGrab={this.props.onGrab.bind(null, child.props.key)} onDrop={this.props.onDrop.bind(null, child.props.key)} onRect={this.handleRect} onClick={this.handleClick}>{child}</Grabbable>;
       return grabbableChild;
     },this);
-    
+
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
         <br key={'dwdwdwdwd'}/>

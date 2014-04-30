@@ -2,7 +2,8 @@
 
 var columns = [
   {id: 2, title: 'hats', items: [4, 5, 6]},
-  {id: 3, title: 'fake hats', items: [9, 10]}
+  {id: 3, title: 'fake hats', items: [9, 10]},
+  {id: 4, title: 'I dunno, crabs?', items: [14, 15, 16]}
 ];
 
 var items = [
@@ -11,7 +12,11 @@ var items = [
   {id: 6, text: 'Bowler'},
 
   {id: 9, text: 'Panama'},
-  {id: 10, text: 'A snake? I dunno.'}
+  {id: 10, text: 'A snake? I dunno.'},
+
+  {id: 14, text: 'Cat skin'},
+  {id: 15, text: 'Rabit Skin'},
+  {id: 16, text: 'Space needle?'}
 ];
 
 function buildTest(data) {
