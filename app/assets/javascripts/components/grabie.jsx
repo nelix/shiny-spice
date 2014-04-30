@@ -160,6 +160,7 @@ var Stackable = React.createClass({
       var grabbableChild = <Grabbable position={i} key={child.props.key} onGrab={this.props.onGrab.bind(null, child.props.key)} onDrop={this.props.onDrop.bind(null, child.props.key)} onRect={this.handleRect} onClick={this.handleClick}>{child}</Grabbable>;
       return grabbableChild;
     },this);
+
     var placeStyle = {display: 'block', height: '10px'}
     placeStyle[getStyleProperty('box-shadow')] = '3px 3px 5px 6px #ccc';
 
