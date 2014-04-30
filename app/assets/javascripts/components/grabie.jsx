@@ -161,12 +161,9 @@ var Stackable = React.createClass({
       return grabbableChild;
     },this);
 
-    var placeStyle = {display: 'block', height: '10px'}
-    placeStyle[getStyleProperty('box-shadow')] = '3px 3px 5px 6px #ccc';
-
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
-        <span style={placeStyle} key={'gap'}></span>
+        <span className="grabbie-placeholder" key={'gap'}></span>
       );
     }
     return <div className="sortie-column">{items}</div>;
