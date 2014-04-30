@@ -131,7 +131,7 @@ var Scrollie = React.createClass({
       return (
         <div ref="scrollieContainer" className={scrollie.prefix + '-container'} onScroll={this.handleScroll}>
           <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'} style={this.state.wrapperStyle}>
-            <div ref="scrollieItems" className={scrollie.prefix + '-items'}>
+            <div ref="scrollieItems" className={scrollie.prefix + '-items has-scrollbar'}>
               {this.props.children}
             </div>
           </div>
@@ -144,7 +144,7 @@ var Scrollie = React.createClass({
       return (
         <div ref="scrollieContainer" className={scrollie.prefix + '-container'}>
           <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'}>
-            <div className={scrollie.prefix + '-items'} ref="scrollieItems">
+            <div ref="scrollieItems" className={scrollie.prefix + '-items'}>
               {this.props.children}
             </div>
           </div>
