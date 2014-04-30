@@ -37,9 +37,12 @@ var StackieRectKeeperMixin = {
     var matchKey = null;
     $.each(this.childRects, function(key, rect) {
       if (!rect.component.state.dragging && rect.component.isEventInRect(e, rect.rect)) {
-        if ((this.state.overItemKey !== rect.itemKey) || (this.state.overColumnKey !== rect.overColumnKey) || (this.state.overItemPosition !== rect.component.props.position))
-        this.setState({overItemKey: rect.itemKey, overColumnKey: rect.columnKey, overItemPosition: rect.component.props.position});
-        this.props.onGrabOver && this.props.onGrabOver(this.state);
+        if ((this.state.overItemKey !== rect.itemKey) || (this.state.overColumnKey !== rect.columnKey) || (this.state.overItemPosition !== rect.component.props.position)) {
+          console.log('pre', this.state)
+          this.setState({overItemKey: rect.itemKey, overColumnKey: rect.columnKey, overItemPosition: rect.component.props.position});
+          console.log('post', this.state)
+          this.props.onGrabOver && this.props.onGrabOver(this.state);
+        }
       }
     }.bind(this));
 

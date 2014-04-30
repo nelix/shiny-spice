@@ -18,12 +18,8 @@ function buildTest(data) {
   return <TestBox key={data.id} text={data.text}/>;
 }
 
-function log() {
-  console.log(arguments[0])
-}
-
 function go() {
 React.renderComponent(
- <Boardie onGrabOver={log} columns={columns} items={items} itemBuilder={buildTest}/>,
+ <Boardie  columns={columns} items={items} itemBuilder={buildTest}/>,
   document.body);
 }

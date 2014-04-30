@@ -149,13 +149,11 @@ var Stackable = React.createClass({
   },
 
   render: function() {
-    console.log('start')
     var items = this.props.children.map(function joinChildWithGrabbable(child, i) {
-      console.log(child.props.text)
       var grabbableChild = <Grabbable position={i} key={child.props.key} onGrab={this.props.onGrab.bind(null, child.props.key)} onDrop={this.props.onDrop.bind(null, child.props.key)} onRect={this.handleRect} onClick={this.handleClick}>{child}</Grabbable>;
       return grabbableChild;
     },this);
-    console.log('end col')
+    
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
         <br key={'dwdwdwdwd'}/>
