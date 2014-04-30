@@ -3,6 +3,13 @@
 var columns = [
   {id: 2, title: 'hats', items: [4, 5, 6, 7, 8]},
   {id: 3, title: 'fake hats', items: [9, 10]}
+
+  {id: 2, title: 'hats', items: [4, 5, 6]},
+  {id: 3, title: 'fake hats', items: [9, 10]},
+  {id: 4, title: 'I dunno, crabs?', items: [14, 15, 16]}
+  {id: 14, text: 'Cat skin'},
+  {id: 15, text: 'Rabit Skin'},
+  {id: 16, text: 'Space needle?'}
 ];
 
 var items = [
@@ -13,36 +20,7 @@ var items = [
   {id: 8, text: 'Flat brim'},
 
   {id: 9, text: 'Panama'},
-  {id: 10, text: 'A snake? I dunno.'}
-];
-
-function find(needle, haystack, attr) {
-  attr = attr || 'id';
-
-  return (haystack || []).filter(
-    function(hay) {
-      return (needle === hay[attr]);
-    }
-  )[0];
-}
-
-function findIndex(needle, haystack, attr) {
-  attr = attr || 'id';
-  var index;
-
-  (haystack || []).forEach(
-    function(hay, ind) {
-      if (needle === hay[attr]) index = ind;
-    }
-  );
-  return index;
-}
-
-function findItem(id, columns) {
-
-}
-
-var MyBoard = React.createClass({
+  {id: 10, text: 'A snake? I dunno.'},
 
   mixins: [StackieRectKeeperMixin],
 
@@ -95,16 +73,11 @@ var MyBoard = React.createClass({
 });
 
 function buildTest(data) {
-  console.log('itemkey', data.id)
   return <TestBox key={data.id} text={data.text}/>;
-}
-
-function log() {
-  console.log(arguments)
 }
 
 function go() {
 React.renderComponent(
- <MyBoard onGrabOver={log} columns={columns} items={items} itemBuilder={buildTest}/>,
+ <Boardie  columns={columns} items={items} itemBuilder={buildTest}/>,
   document.body);
 }
