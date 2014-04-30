@@ -11,14 +11,14 @@ var GrabMouseMixin = {
     };
   },
 
-  grabStyle: function() {
-    var style = this.props.style || {};
+  grabStyle: function(style, rect) {
+    style = style || {};
 
-    //style['position'] = 'relative';
+    style['position'] = 'absolute';
 
     if (this.state.dragging) {
-      var x = this.state.grabX //- this.state.grabStartX; TODO: use the start pos to work out where on the box it grabbed
-      var y = this.state.grabY //- this.state.grabStartY;
+      var x = this.state.grabX - (this.state.grabStartX - rect.left);
+      var y = this.state.grabY - (this.state.grabStartY - rect.top );
       if (transformProperty) {
         style[transformProperty] = translate(x,y);
       } else {
@@ -90,6 +90,7 @@ var GrabMouseMixin = {
   },
 
   componentDidUpdate: function () {
+    this.getDOMNode().addEventListener('mousedown', this.handleGrabieMouseDown);
     if (this.state.dragging && !this.dragEventsAttached) {
       this.grabieEventsAttached = true;
       window.addEventListener('mousemove', this.handleGrabieMouseMove);
@@ -111,12 +112,18 @@ var RectMixin = {
   },
 
   componentDidUpdate: function() {
+    if (this.state.dragging) return;
     this.rect = getBounds(this.getDOMNode());
+this.rect.innerHeight = document.defaultView.getComputedStyle(this.getDOMNode()).height;
+this.rect.innerWidth = document.defaultView.getComputedStyle(this.getDOMNode()).width;
     this.props.onRect && this.props.onRect(this, this.rect);
   },
 
   componentDidMount: function() {
+    if (this.state.dragging) return;
     this.rect = getBounds(this.getDOMNode());
+    this.rect.innerHeight = document.defaultView.getComputedStyle(this.getDOMNode()).height;
+    this.rect.innerWidth = document.defaultView.getComputedStyle(this.getDOMNode()).width;
     this.props.onRect && this.props.onRect(this, this.rect);
   }
 };
@@ -126,8 +133,12 @@ var Grabber = React.createClass({
   propTypes: {
     children: React.PropTypes.component.isRequired
   },
+
   renderLayer: function() {
     var style = this.props.styles;
+    this.props.children.props.style = this.props.children.props.style || {};
+    this.props.children.props.style['width'] = this.props.styles.width;
+
     return <div style={style} className="grabie-grabbable grabie-grabbing">{React.Children.only(this.props.children)}</div>;
   },
   render: function() {return <span style={{display:'none'}}/>}
@@ -146,7 +157,7 @@ var Grabbable = React.createClass({
         <div className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
       );
     } else {
-      return <Grabber styles={this.grabStyle()}>{React.Children.only(this.props.children)}</Grabber>
+      return <Grabber styles={this.grabStyle({width: this.rect.innerWidth, height: this.rect.innerHeight}, this.rect)}>{React.Children.only(this.props.children)}</Grabber>
     }
 
   }

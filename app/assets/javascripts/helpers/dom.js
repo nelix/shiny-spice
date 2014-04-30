@@ -36,6 +36,7 @@
   };
 
   var transformProperty = getStyleProperty('transform');
+
   var is3d = !!getStyleProperty('perspective');
   var translate = is3d ?
     function( x, y ) {
