@@ -41,7 +41,7 @@ var StackieRectKeeperMixin = {
     this.childRects[component.props.key] = {component: component, rect: rect, itemKey: component.props.key, columnKey: columnKey};
   },
 
-  handleMove: function(e) {
+  handleBoardieMove: function(e) {
     var matchKey = null;
     $.each(this.childRects, function(key, rect) {
       if (!rect.component.state.dragging && rect.component.isEventInRect(e, rect.rect)) {
@@ -60,13 +60,13 @@ var StackieRectKeeperMixin = {
 
   handleGrab: function(colId, key) {
     this.setState({dragItemKey: key});
-    window.addEventListener('mousemove', this.handleMove);
+    window.addEventListener('mousemove', this.handleBoardieMove);
   },
 
   handleDrop: function(key) {
     if (this.state.dragItemKey !== false && this.state.overItemPosition !== false && this.state.overColumnKey !== false && this.state.overItemPosition !== null) this.handleSort(this.state.dragItemKey, this.state.overItemPosition, this.state.overColumnKey);
     this.setState({dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null});
-    window.removeEventListener('mousemove', this.handleMove);
+    window.removeEventListener('mousemove', this.handleBoardieMove);
   },
 };
 

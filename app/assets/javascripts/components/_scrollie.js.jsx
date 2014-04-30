@@ -57,7 +57,7 @@ var Scrollie = React.createClass({
       var scrollbarHeight = scrollWrapper.clientHeight * (scrollWrapper.clientHeight / children.clientHeight);
       var scrollbarOffset = scrollWrapper.scrollTop;
       this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollWrapper);
-      
+
       // Check the top offset, larguly used for updating component
       if (this.childrenHeight && (this.childrenHeight !== children.clientHeight)) {
           this.setState({scrollbarOffset: (scrollbarOffset / children.clientHeight) * (scrollWrapper.clientHeight)})
@@ -125,7 +125,7 @@ var Scrollie = React.createClass({
         <div ref="listWrapper" className={scrollie.prefix + '-container'} onScroll={this.handleScroll}>
           <div ref="scrollWrapper" className={scrollie.prefix + '-wrapper'} style={this.state.wrapperStyle}>
             <div className="children" ref="children">
-              {this.props.content}
+              {this.props.children}
             </div>
           </div>
           <div className="scrollbar">
@@ -138,7 +138,7 @@ var Scrollie = React.createClass({
         <div ref="listWrapper" className={scrollie.prefix + '-container'}>
           <div ref="scrollWrapper" className={scrollie.prefix + '-wrapper'}>
             <div className="children" ref="children">
-              {this.props.content}
+              {this.props.children}
             </div>
           </div>
         </div>
@@ -156,7 +156,7 @@ var ScrollieMixin = {
     var options = extend(defaults, parameters)
 
     return (
-      <Scrollie options={options} content={component}></Scrollie>
+      <Scrollie options={options}>{component}</Scrollie>
     );
   }
 }
