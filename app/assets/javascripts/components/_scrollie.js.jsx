@@ -9,108 +9,107 @@ function extend(a, b){
 
 var Scrollie = React.createClass({
   getInitialState: function () {
-      return {
-          scrollable: false,
-          scrolling: false,
-          scrollbarHeight: 0,
-          scrollbarOffset: 0
-      };
+    return {
+      scrollable: false,
+      scrolling: false,
+      scrollbarHeight: 0,
+      scrollbarOffset: 0
+    };
   },
 
   // Lifecycle
   componentDidMount: function() {
-      this.createScrollbar();
-      window.addEventListener('resize', this.createScrollbar);
+    this.createScrollbar();
+    window.addEventListener('resize', this.createScrollbar);
   },
 
   componentDidUpdate: function () {
-      this.createScrollbar();
+    this.createScrollbar();
   },
 
   hideNativeScrollbar: function(scrollableElement) {
-      var wrapperStyle = {
-          right: '-' + this.nativeScrollbarWidth + 'px'
-      }
+    var wrapperStyle = {
+      right: '-' + this.nativeScrollbarWidth + 'px'
+    }
 
-      this.setState({wrapperStyle: wrapperStyle});
+    this.setState({wrapperStyle: wrapperStyle});
   },
 
   getNativeScrollbarWidth: function(scrollableElement) {
-      return scrollableElement.offsetWidth - scrollableElement.clientWidth;
+    return scrollableElement.offsetWidth - scrollableElement.clientWidth;
   },
 
   handleScroll: function(scrollEvent) {
-      var scrollAmount = scrollEvent.target.scrollTop;
+    var scrollAmount = scrollEvent.target.scrollTop;
 
-      var scrollbarOffset = (scrollAmount / this.scrollieItemsHeight) * (this.scrollieWrapperHeight);
+    var scrollbarOffset = (scrollAmount / this.scrollieItemsHeight) * (this.scrollieWrapperHeight);
 
-      this.setState({
-          scrollbarOffset: scrollbarOffset,
-          nativeScrollbarOffset: scrollAmount
-      });
+    this.setState({
+      scrollbarOffset: scrollbarOffset,
+      nativeScrollbarOffset: scrollAmount
+    });
   },
 
   createScrollbar: function() {
-      var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
-      var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
-      var scrollieItems = this.refs.scrollieItems.getDOMNode();
-      var scrollbarHeight = scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight);
-      var scrollbarOffset = scrollieWrapper.scrollTop;
-      this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
+    var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
+    var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
+    var scrollieItems = this.refs.scrollieItems.getDOMNode();
+    var scrollbarHeight = scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight);
+    var scrollbarOffset = scrollieWrapper.scrollTop;
+    this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
 
-      // Check the top offset, larguly used for updating component
-      if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
-          this.setState({scrollbarOffset: (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight)})
+    // Check the top offset, larguly used for updating component
+    if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
+        this.setState({scrollbarOffset: (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight)})
+    }
+
+    this.scrollieItemsHeight = scrollieItems.clientHeight;
+    this.scrollieWrapperHeight = scrollieWrapper.clientHeight;
+
+    // Check if we should add some scrolls
+    if (scrollieItems.clientHeight > scrollieWrapper.clientHeight) {
+      if (this.state.scrollbarHeight !== scrollbarHeight) {
+        this.setState({scrollbarHeight: scrollbarHeight});
       }
 
-      this.scrollieItemsHeight = scrollieItems.clientHeight;
-      this.scrollieWrapperHeight = scrollieWrapper.clientHeight;
-
-      // Check if we should add some scrolls
-      if (scrollieItems.clientHeight > scrollieWrapper.clientHeight) {
-          if (this.state.scrollbarHeight !== scrollbarHeight) {
-              this.setState({scrollbarHeight: scrollbarHeight});
-          }
-
-          // Scrolls are required, check if they dont exist
-          if (!this.state.scrollable) {
-              this.setState({scrollable: true});
-              this.hideNativeScrollbar(scrollieWrapper);
-          };
+      // Scrolls are required, check if they dont exist
+      if (!this.state.scrollable) {
+        this.setState({scrollable: true});
+        this.hideNativeScrollbar(scrollieWrapper);
+      }
 
 
-          if (this.state.nativeScrollbarOffset !== scrollbarOffset) {
-              newScrollOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
-              this.setState({scrollbarOffset: newScrollOffset, nativeScrollbarOffset: scrollbarOffset});
-          }
+      if (this.state.nativeScrollbarOffset !== scrollbarOffset) {
+        newScrollOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
+        this.setState({scrollbarOffset: newScrollOffset, nativeScrollbarOffset: scrollbarOffset});
+      }
 
-      } else {
-          if (this.state.scrollable) {
-              this.setState({scrollable: false});
-          }
-      };
+    } else if (this.state.scrollable) {
+        this.setState({scrollable: false});
+      }
+    }
   },
 
   // Mouse events
   handleMouseDown: function(mouse) {
-      window.addEventListener('mousemove', this.handleMouseMove);
-      window.addEventListener('mouseup', this.handleMouseUp);
-      this.startMouseY = mouse.nativeEvent.pageY;
-      this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
-      this.setState({scrolling: true});
-      this.bodyClass = document.body.className;
-      document.body.className = this.bodyClass + ' no-select';
+    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('mouseup', this.handleMouseUp);
+    this.startMouseY = mouse.nativeEvent.pageY;
+    this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
+    this.setState({scrolling: true});
+    this.bodyClass = document.body.className;
+    document.body.className = this.bodyClass + ' no-select';
   },
 
   handleMouseUp: function(mouse) {
-      window.removeEventListener('mousemove', this.handleMouseMove);
-      this.setState({scrolling: false});
-      document.body.className = this.bodyClass;
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    this.setState({scrolling: false});
+    document.body.className = this.bodyClass;
   },
 
   handleMouseMove: function(e) {
-      var mouseDelta = this.startMouseY - e.pageY
-      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.scrollieItemsHeight / this.scrollieWrapperHeight));
+    var mouseDelta = this.startMouseY - e.pageY
+    this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.scrollieItemsHeight / this.scrollieWrapperHeight));
   },
 
   render: function() {
