@@ -24,10 +24,8 @@ function findIndex(needle, haystack, attr) {
 }
 
 function mouseOverBottomHalf(e, rect) {
-  var clientYRel = e.pageY - rect.top //- e.currentTarget.scrollTop;
-
+  var clientYRel = e.pageY - rect.top;
   var isTop = (clientYRel <  rect.height/2);
-
   return !isTop;
 }
 
@@ -55,8 +53,8 @@ var StackieRectKeeperMixin = {
     }.bind(this));
   },
 
-  handleGrab: function(colId, key) {
-    this.setState({dragItemKey: key});
+  handleGrab: function(colId, key, position) {
+    this.setState({dragItemKey: key, overItemPosition: position, overColumnKey: colId});
     window.addEventListener('mousemove', this.handleBoardieMove);
   },
 

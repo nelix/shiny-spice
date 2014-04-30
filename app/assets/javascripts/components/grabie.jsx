@@ -72,7 +72,7 @@ var GrabMouseMixin = {
             grabY: e.pageY
           });
 
-          this.props.onGrab && this.props.onGrab();
+          this.props.onGrab && this.props.onGrab(this.props.position);
         }
       }.bind(this), 200
     );
