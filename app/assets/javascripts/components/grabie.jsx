@@ -166,6 +166,6 @@ var Stackable = React.createClass({
         <span className="grabbie-placeholder" key={'gap'}></span>
       );
     }
-    return <div className="sortie-column">{items}</div>;
+    return this.attachScrollie(<div className="sortie-column">{items}</div>);
   }
 });
