@@ -72,7 +72,7 @@ var GrabMouseMixin = {
             grabY: e.pageY
           });
 
-          this.props.onGrab && this.props.onGrab(this.props.position);
+          this.props.onGrab && this.props.onGrab(this.props.position, this.otherWidth, this.otherHeight);
         }
       }.bind(this), 200
     );
@@ -146,17 +146,19 @@ var Grabbable = React.createClass({
   propTypes: {
     children: React.PropTypes.component.isRequired
   },
-  
+
   componentDidUpdate: function(){
-    var el = this.getDOMNode()
+    var el = this.getDOMNode();
     if (el.children.length > 0) {
-      this.otherWidth = el.children[0].clientWidth
+      this.otherWidth = el.children[0].clientWidth;
+      this.otherHeight = el.children[0].clientHeight;
     }
   },
   componentDidMount: function(){
-    var el = this.getDOMNode()
+    var el = this.getDOMNode();
     if (el.children.length > 0) {
-      this.otherWidth = el.children[0].clientWidth
+      this.otherWidth = el.children[0].clientWidth;
+      this.otherHeight = el.children[0].clientHeight;
     }
   },
 
@@ -197,7 +199,7 @@ var Stackable = React.createClass({
 
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
-        <span className="grabbie-placeholder" key={'gap'}></span>
+        <span style={this.props.placeholderStyle} className="grabbie-placeholder" key={'gap'}></span>
       );
     }
     return this.attachScrollie(<div className="sortie-column">{items}</div>);

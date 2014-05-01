@@ -53,8 +53,8 @@ var StackieRectKeeperMixin = {
     }.bind(this));
   },
 
-  handleGrab: function(colId, key, position) {
-    this.setState({dragItemKey: key, overItemPosition: position, overColumnKey: colId});
+  handleGrab: function(colId, key, position, width, height) {
+    this.setState({dragItemKey: key, overItemPosition: position, overColumnKey: colId, dragItemWidth: width, dragItemHeight: height});
     window.addEventListener('mousemove', this.handleBoardieMove);
   },
 
@@ -86,7 +86,7 @@ var Boardie = React.createClass({
     var fromPosition;
 
     if (position >= 0) {
-      
+
       columns.forEach(
         function(column) {
           if (column.items.indexOf(itemId) !== -1) {
@@ -111,7 +111,7 @@ var Boardie = React.createClass({
 
   buildColumn: function(column) {
     var items = this.getItems(column.items);
-    var column = <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>
+    var column = <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>
     return column;
   },
 
