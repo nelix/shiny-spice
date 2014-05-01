@@ -114,16 +114,12 @@ var RectMixin = {
   componentDidUpdate: function() {
     if (this.state.dragging) return;
     this.rect = getBounds(this.getDOMNode());
-this.rect.innerHeight = document.defaultView.getComputedStyle(this.getDOMNode()).height;
-this.rect.innerWidth = document.defaultView.getComputedStyle(this.getDOMNode()).width;
     this.props.onRect && this.props.onRect(this, this.rect);
   },
 
   componentDidMount: function() {
     if (this.state.dragging) return;
     this.rect = getBounds(this.getDOMNode());
-    this.rect.innerHeight = document.defaultView.getComputedStyle(this.getDOMNode()).height;
-    this.rect.innerWidth = document.defaultView.getComputedStyle(this.getDOMNode()).width;
     this.props.onRect && this.props.onRect(this, this.rect);
   }
 };
@@ -150,6 +146,19 @@ var Grabbable = React.createClass({
   propTypes: {
     children: React.PropTypes.component.isRequired
   },
+  
+  componentDidUpdate: function(){
+    var el = this.getDOMNode()
+    if (el.children.length > 0) {
+      this.otherWidth = el.children[0].clientWidth
+    }
+  },
+  componentDidMount: function(){
+    var el = this.getDOMNode()
+    if (el.children.length > 0) {
+      this.otherWidth = el.children[0].clientWidth
+    }
+  },
 
   render: function () {
     if (!this.state.dragging) {
@@ -157,7 +166,7 @@ var Grabbable = React.createClass({
         <div className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
       );
     } else {
-      return <Grabber styles={this.grabStyle({width: this.rect.innerWidth, height: this.rect.innerHeight}, this.rect)}>{React.Children.only(this.props.children)}</Grabber>
+      return <Grabber styles={this.grabStyle({width: this.otherWidth}, this.rect)}>{React.Children.only(this.props.children)}</Grabber>
     }
 
   }
