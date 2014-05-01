@@ -42,16 +42,8 @@ var Scrollie = React.createClass({
   handleScroll: function(scrollEvent) {
     var scrollAmount = scrollEvent.target.scrollTop;
 
-    // Set the standard tracking ratio
-    var scrollieTrackingRatio = this.scrollieItemsHeight / this.scrollieWrapperHeight;
-
-    // If the user has a min OR max scrollbar height set, we need to adjust tracking ratio
-    if (this.originalScrollbarHeight < this.state.scrollbarHeight || this.originalScrollbarHeight > this.state.scrollbarHeight) {
-      scrollieTrackingRatio = ((this.scrollieItemsHeight - this.scrollieWrapperHeight) / ((this.scrollieWrapperHeight - (this.props.options.verticalOffset * 2)) - this.state.scrollbarHeight));
-    }
-
     // Set the offset
-    var scrollbarOffset = scrollAmount / scrollieTrackingRatio;
+    var scrollbarOffset = scrollAmount / this.scrollieTrackingRatio;
 
     this.setState({
       scrollbarOffset: scrollbarOffset + this.props.options.verticalOffset,
@@ -103,6 +95,14 @@ var Scrollie = React.createClass({
         pendingState.nativeScrollbarOffset = scrollbarOffset;
       }
 
+      // Set the standard tracking ratio
+      this.scrollieTrackingRatio = this.scrollieItemsHeight / this.scrollieWrapperHeight;
+
+      // If the user has a min OR max scrollbar height set, we need to adjust tracking ratio
+      if (this.originalScrollbarHeight < this.state.scrollbarHeight || this.originalScrollbarHeight > this.state.scrollbarHeight) {
+        this.scrollieTrackingRatio = ((this.scrollieItemsHeight - this.scrollieWrapperHeight) / ((this.scrollieWrapperHeight - (this.props.options.verticalOffset * 2)) - this.state.scrollbarHeight));
+      }
+
     } else if (this.state.scrollable) {
       pendingState.scrollable = false;
     }
@@ -118,19 +118,19 @@ var Scrollie = React.createClass({
     this.startMouseY = mouse.nativeEvent.pageY;
     this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
     this.setState({scrolling: true});
-    this.bodyClass = document.body.className;
-    document.body.className = this.bodyClass + ' no-select';
+    document.body.classList.add('no-select');
   },
 
   handleMouseUp: function(mouse) {
     window.removeEventListener('mousemove', this.handleMouseMove);
     this.setState({scrolling: false});
-    document.body.className = this.bodyClass; // TODO: need to do something more specific
+    document.body.classList.remove('no-select');
   },
 
   handleMouseMove: function(e) {
     var mouseDelta = this.startMouseY - e.pageY;
-    this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - (mouseDelta * (this.scrollieItemsHeight / this.scrollieWrapperHeight));
+    var moveAmount = mouseDelta * this.scrollieTrackingRatio;
+    this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - moveAmount;
   },
 
   render: function() {
@@ -177,7 +177,7 @@ var ScrollieMixin = {
   attachScrollie: function(component, parameters) {
     var defaults = {
       maxHeight: null,
-      minHeight: 20,
+      minHeight: 100,
       persistant: true,
       prefix: 'scrollie',
       verticalOffset: 0
