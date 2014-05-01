@@ -14,7 +14,7 @@ var GrabMouseMixin = {
   grabStyle: function(style, rect) {
     style = style || {};
 
-    style['position'] = 'absolute';
+    style.position = 'absolute';
 
     if (this.state.dragging) {
       var x = this.state.grabX - (this.state.grabStartX - rect.left);
