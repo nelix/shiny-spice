@@ -86,8 +86,7 @@ var Boardie = React.createClass({
     var fromPosition;
 
     if (position >= 0) {
-
-
+      
       columns.forEach(
         function(column) {
           if (column.items.indexOf(itemId) !== -1) {
@@ -97,8 +96,9 @@ var Boardie = React.createClass({
           }
         }
       );
-      if (fromColumn.id === columnId) {
-        if (fromPosition < position )position--
+
+      if ((fromColumn.id === columnId) && (fromPosition < position) ) {
+        position--;
       }
       var columnIndex = findIndex(columnId, columns);
       var newColItems = columns[columnIndex].items;
