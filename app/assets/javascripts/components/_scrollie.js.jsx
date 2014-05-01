@@ -29,7 +29,7 @@ var Scrollie = React.createClass({
 
   hideNativeScrollbar: function(scrollableElement) {
     var wrapperStyle = {
-      right: '-' + this.nativeScrollbarWidth + 'px'
+      right: '-' + this.nativeScrollbarWidth
     }
 
     this.setState({wrapperStyle: wrapperStyle});
@@ -42,7 +42,16 @@ var Scrollie = React.createClass({
   handleScroll: function(scrollEvent) {
     var scrollAmount = scrollEvent.target.scrollTop;
 
-    var scrollbarOffset = (scrollAmount / this.scrollieItemsHeight) * (this.scrollieWrapperHeight);
+    // Set the standard tracking ratio
+    var scrollieTrackingRatio = this.scrollieItemsHeight / this.scrollieWrapperHeight;
+
+    // If the user has a min OR max scrollbar height set, we need to adjust tracking ratio
+    if (this.originalScrollbarHeight < this.state.scrollbarHeight || this.originalScrollbarHeight > this.state.scrollbarHeight) {
+      scrollieTrackingRatio = ((this.scrollieItemsHeight - this.scrollieWrapperHeight) / ((this.scrollieWrapperHeight - (this.props.options.verticalOffset * 2)) - this.state.scrollbarHeight));
+    }
+
+    // Set the offset
+    var scrollbarOffset = scrollAmount / scrollieTrackingRatio;
 
     this.setState({
       scrollbarOffset: scrollbarOffset + this.props.options.verticalOffset,
@@ -51,14 +60,22 @@ var Scrollie = React.createClass({
   },
 
   createScrollbar: function() {
-    var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
-    var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
-    var scrollieItems = this.refs.scrollieItems.getDOMNode();
-    var scrollbarHeight = (scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight)) - (this.props.options.verticalOffset * 2);
-    var scrollbarOffset = scrollieWrapper.scrollTop;
-    this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
+    var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode(),
+      scrollieContainer = this.refs.scrollieContainer.getDOMNode(),
+          scrollieItems = this.refs.scrollieItems.getDOMNode(),
+        scrollbarHeight = (scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight)) - (this.props.options.verticalOffset * 2),
+        scrollbarOffset = scrollieWrapper.scrollTop,
+           pendingState = {};
 
-    var pendingState = {};
+    this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
+    this.originalScrollbarHeight = scrollbarHeight;
+
+    if (scrollbarHeight < this.props.options.minHeight) {
+      scrollbarHeight = this.props.options.minHeight;
+    } else if (this.props.options.maxHeight && scrollbarHeight > this.props.options.maxHeight) {
+      scrollbarHeight = this.props.options.maxHeight;
+    }
+
     // Check the top offset, largly used for updating component
     if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
         pendingState.scrollbarOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
@@ -117,9 +134,9 @@ var Scrollie = React.createClass({
   },
 
   render: function() {
-    var scrollie = this.props.options;
-
-    var thumbStyle = this.props.style || {height: this.state.scrollbarHeight};
+    var scrollie = this.props.options,
+      thumbStyle = this.props.style || {height: this.state.scrollbarHeight},
+      scrollieContainerClass = (scrollie.prefix + '-container');
 
     if (transformProperty) {
       thumbStyle[transformProperty] = translate(0, this.state.scrollbarOffset);
@@ -127,9 +144,11 @@ var Scrollie = React.createClass({
       thumbStyle.top = this.state.scrollbarOffset;
     }
 
+    if (!scrollie.persistant) {scrollieContainerClass += ' ' + scrollie.prefix + '-on-hover';}
+
     if (this.state.scrollable) {
       return (
-        <div ref="scrollieContainer" className={scrollie.prefix + '-container'} onScroll={this.handleScroll}>
+        <div ref="scrollieContainer" className={scrollieContainerClass} onScroll={this.handleScroll}>
           <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'} style={this.state.wrapperStyle}>
             <div ref="scrollieItems" className={scrollie.prefix + '-items has-scrollbar'}>
               {this.props.children}
@@ -157,6 +176,9 @@ var Scrollie = React.createClass({
 var ScrollieMixin = {
   attachScrollie: function(component, parameters) {
     var defaults = {
+      maxHeight: null,
+      minHeight: 20,
+      persistant: true,
       prefix: 'scrollie',
       verticalOffset: 0
     };
