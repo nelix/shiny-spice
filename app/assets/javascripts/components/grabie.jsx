@@ -36,7 +36,6 @@ var GrabMouseMixin = {
 
     if (this.mightClick) {
       this.mightClick = false;
-      this.props.onClick && this.props.onClick(e);
     } else {
       this.props.onDrop && this.props.onDrop();
     }
