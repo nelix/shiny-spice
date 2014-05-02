@@ -114,6 +114,10 @@ var Scrollie = React.createClass({
   },
 
   // Mouse events
+  setScrollbarClicked: function() {
+    this.scrollbarClicked = true;
+  },
+
   handleGrabieGrab: function(mouse) {
     this.startMouseY = mouse.grabStartY;
     this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
@@ -124,11 +128,14 @@ var Scrollie = React.createClass({
   handleGrabieMove: function(mouse) {
     var mouseDelta = mouse.grabStartY - mouse.grabY;
     var moveAmount = mouseDelta * this.scrollieTrackingRatio;
-    this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - moveAmount;
+    if (this.scrollbarClicked) {
+      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - moveAmount;
+    }
   },
 
   handleGrabieRelease: function(mouse) {
     this.setState({scrolling: false});
+    this.scrollbarClicked = false;
     document.body.classList.remove('no-select');
   },
 
@@ -154,7 +161,7 @@ var Scrollie = React.createClass({
             </div>
           </div>
           <div className={scrollie.prefix + '-scrollbar'}>
-              <div className={scrollie.prefix + '-scrollbar-thumb'} style={thumbStyle}></div>
+              <div className={scrollie.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this.setScrollbarClicked}></div>
           </div>
         </div>
       );
