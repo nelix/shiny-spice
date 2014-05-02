@@ -14,11 +14,11 @@ var GrabieMouseMixin = {
   },
 
   componentDidMount: function() {
-    this.getDOMNode().addEventListener('mousedown', this.handleGrabieMouseDown);
+    this.getDOMNode().addEventListener('mousedown', this._handleGrabieMouseDown);
   },
 
   componentWillUnmount: function() {
-    this.getDOMNode().removeEventListener('mousedown', this.handleGrabieMouseDown);
+    this.getDOMNode().removeEventListener('mousedown', this._handleGrabieMouseDown);
   },
 
   setGrabieState: function(state) {
@@ -50,11 +50,12 @@ var GrabieMouseMixin = {
 
   _isLeftMouseButton: function(e) {
     var button = e.button;
-    return !(button && (button !== 0 && button !== 1));
+    return (button && (button !== 0 && button !== 1));
   },
 
   _handleGrabieMouseDown: function(e) {
     if (this._isLeftMouseButton(e)) {
+      debugger
       return;
     }
 
