@@ -52,12 +52,12 @@ var Scrollie = React.createClass({
   },
 
   createScrollbar: function() {
-    var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode(),
-      scrollieContainer = this.refs.scrollieContainer.getDOMNode(),
-          scrollieItems = this.refs.scrollieItems.getDOMNode(),
-        scrollbarHeight = (scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight)) - (this.props.options.verticalOffset * 2),
-        scrollbarOffset = scrollieWrapper.scrollTop,
-           pendingState = {};
+    var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
+    var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
+    var scrollieItems = this.refs.scrollieItems.getDOMNode();
+    var scrollbarHeight = (scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight)) - (this.props.options.verticalOffset * 2);
+    var scrollbarOffset = scrollieWrapper.scrollTop;
+    var pendingState = {};
 
     this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
     this.originalScrollbarHeight = scrollbarHeight;

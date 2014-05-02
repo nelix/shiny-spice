@@ -18,7 +18,7 @@ var GrabMouseMixin = {
 
     if (this.state.dragging) {
       var x = this.state.grabX - (this.state.grabStartX - rect.left);
-      var y = this.state.grabY - (this.state.grabStartY - rect.top );
+      var y = this.state.grabY - (this.state.grabStartY - rect.top);
       if (transformProperty) {
         style[transformProperty] = translate(x,y);
       } else {
