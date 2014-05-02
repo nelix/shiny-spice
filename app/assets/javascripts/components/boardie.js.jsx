@@ -109,9 +109,20 @@ var Boardie = React.createClass({
     }
   },
 
-  buildColumn: function(column) {
+  buildColumn: function(column, i) {
     var items = this.getItems(column.items);
-    var column = <Stackable overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition} placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}} overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id} onDrop={this.handleDrop} onGrab={this.handleGrab.bind(null, column.id)} onRect={this.handleRect}>{items}</Stackable>
+    var column = <Grabbable position={i} key={column.id} onRect={this.handleRect2}>
+      <Stackable
+          overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition}
+          placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}}
+          overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id}
+          onDrop={this.handleDrop}
+          onGrab={this.handleGrab.bind(null, column.id)}
+          onRect={this.handleRect}>
+        {items}
+      </Stackable>
+    </Grabbable>
+
     return column;
   },
 
