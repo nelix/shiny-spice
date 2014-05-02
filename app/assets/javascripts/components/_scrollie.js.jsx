@@ -114,29 +114,6 @@ var Scrollie = React.createClass({
   },
 
   // Mouse events
-  /*
-  handleMouseDown: function(mouse) {
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
-    this.startMouseY = mouse.nativeEvent.pageY;
-    this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
-    this.setState({scrolling: true});
-    document.body.classList.add('no-select');
-  },
-
-  handleMouseUp: function(mouse) {
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    this.setState({scrolling: false});
-    document.body.classList.remove('no-select');
-  },
-
-  handleMouseMove: function(e) {
-    var mouseDelta = this.startMouseY - e.pageY;
-    var moveAmount = mouseDelta * this.scrollieTrackingRatio;
-    this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - moveAmount;
-  },
-  */
-
   handleGrabieGrab: function(mouse) {
     this.startMouseY = mouse.grabStartY;
     this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
@@ -145,7 +122,6 @@ var Scrollie = React.createClass({
   },
 
   handleGrabieMove: function(mouse) {
-    console.log(mouse)
     var mouseDelta = mouse.grabStartY - mouse.grabY;
     var moveAmount = mouseDelta * this.scrollieTrackingRatio;
     this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - moveAmount;
@@ -178,7 +154,7 @@ var Scrollie = React.createClass({
             </div>
           </div>
           <div className={scrollie.prefix + '-scrollbar'}>
-              <div className={scrollie.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}></div>
+              <div className={scrollie.prefix + '-scrollbar-thumb'} style={thumbStyle}></div>
           </div>
         </div>
       );
