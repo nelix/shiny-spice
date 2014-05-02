@@ -19,6 +19,11 @@ var GrabieMouseMixin = {
     };
   },
 
+  componentDidUpdate: function() {
+    // wtf, why does this need to be here, totes need jquery because events are hard
+    this.getDOMNode().addEventListener('mousedown', this._handleGrabieMouseDown);
+  },
+
   componentDidMount: function() {
     this.getDOMNode().addEventListener('mousedown', this._handleGrabieMouseDown);
   },
@@ -44,6 +49,7 @@ var GrabieMouseMixin = {
     } else {
       this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
     }
+
   },
 
   _handleGrabieMouseMove: function (e) {
@@ -62,19 +68,19 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseDown: function(e) {
+
     if (this._isLeftMouseButton(e)) {
       return;
     }
 
     window.addEventListener('mouseup', this._handleGrabieMouseUp);
-
     this.grabieMightClick = true;
     setTimeout(
       function() {
         if (this.grabieMightClick) {
+
           this.grabieMightClick = false;
           window.addEventListener('mousemove', this._handleGrabieMouseMove);
-
           this.setGrabieState({
             mouseDown: true,
             grabStartX: e.pageX,
