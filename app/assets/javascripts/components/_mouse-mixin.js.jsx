@@ -13,6 +13,14 @@ var GrabieMouseMixin = {
     };
   },
 
+  componentDidMount: function() {
+    this.getDOMNode().addEventListener('mousedown', this.handleGrabieMouseDown);
+  },
+
+  componentWillUnmount: function() {
+    this.getDOMNode().removeEventListener('mousedown', this.handleGrabieMouseDown);
+  },
+
   setGrabieState: function(state) {
     return this.setState({grabieMouse: state});
   },
