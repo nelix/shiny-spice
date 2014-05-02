@@ -55,7 +55,6 @@ var GrabieMouseMixin = {
 
   _handleGrabieMouseDown: function(e) {
     if (this._isLeftMouseButton(e)) {
-      debugger
       return;
     }
 
@@ -65,7 +64,7 @@ var GrabieMouseMixin = {
     setTimeout(
       function() {
         if (this.grabieMightClick) {
-          this.mightClick = false;
+          this.grabieMightClick = false;
           window.addEventListener('mousemove', this._handleGrabieMouseMove);
 
           this.setGrabieState({
