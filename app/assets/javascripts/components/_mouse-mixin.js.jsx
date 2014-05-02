@@ -39,7 +39,7 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseMove: function (e) {
-    if (!this._grabieMightClick && this.state.grabieMouse.mouseDown) {
+    if (!this.grabieMightClick && this.state.grabieMouse.mouseDown) {
       this.setGrabieState({
         grabX: e.pageX,
         grabY: e.pageY
