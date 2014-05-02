@@ -29,8 +29,8 @@ var GrabieMouseMixin = {
 
   setGrabieState: function(state) {
     var oldGrabieMouse = this.state.grabieMouse;
-
     return this.setState({grabieMouse: extend(oldGrabieMouse, state)});
+
   },
 
   _handleGrabieMouseUp: function (e) {
