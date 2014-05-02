@@ -1,4 +1,10 @@
 /** @jsx React.DOM */
+function extend(a, b){
+    for(var key in b)
+        if(b.hasOwnProperty(key))
+            a[key] = b[key];
+    return a;
+}
 
 var GrabieMouseMixin = {
   getInitialState: function () {
@@ -22,7 +28,9 @@ var GrabieMouseMixin = {
   },
 
   setGrabieState: function(state) {
-    return this.setState({grabieMouse: state});
+    var oldGrabieMouse = this.state.grabieMouse;
+
+    return this.setState({grabieMouse: extend(oldGrabieMouse, state)});
   },
 
   _handleGrabieMouseUp: function (e) {
@@ -39,7 +47,8 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseMove: function (e) {
-    if (!this._grabieMightClick && this.state.grabieMouse.mouseDown) {
+    if (!this.grabieMightClick && this.state.grabieMouse.mouseDown) {
+
       this.setGrabieState({
         grabX: e.pageX,
         grabY: e.pageY
