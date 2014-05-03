@@ -19,47 +19,33 @@ var GrabieMouseMixin = {
     };
   },
 
-  componentDidUpdate: function() {
-    // wtf, why does this need to be here, totes need jquery because events are hard
-    this.getDOMNode().addEventListener('mousedown', this._handleGrabieMouseDown);
-  },
-
-  componentDidMount: function() {
-    this.getDOMNode().addEventListener('mousedown', this._handleGrabieMouseDown);
-  },
-
-  componentWillUnmount: function() {
-    this.getDOMNode().removeEventListener('mousedown', this._handleGrabieMouseDown);
-  },
-
   setGrabieState: function(state) {
     var oldGrabieMouse = this.state.grabieMouse;
     return this.setState({grabieMouse: extend(oldGrabieMouse, state)});
-
   },
 
   _handleGrabieMouseUp: function (e) {
-    window.removeEventListener('mouseup', this._handleGrabieMouseUp);
-    window.removeEventListener('mousemove', this._handleGrabieMouseMove);
-
-    this.state.grabieMouse && this.setGrabieState({mouseDown: false});
-
-    if (this.mightClick) {
-      this.grabieMightClick = false;
-    } else {
-      this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
-    }
-
+    this.state.grabieMouse.mouseDown && this.setGrabieState({mouseDown: false});
+    this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
   },
 
   _handleGrabieMouseMove: function (e) {
-    if (!this.grabieMightClick && this.state.grabieMouse.mouseDown) {
+    if (this.state.grabieMouse.mouseDown) {
+
+      var x = e.pageX;
+      var y = e.pageY;
+
       this.setGrabieState({
-        grabX: e.pageX,
-        grabY: e.pageY
+        grabX: x,
+        grabY: y
       });
-      this.handleGrabieMove  && this.handleGrabieMove(this.state.grabieMouse);
+
+      this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse);
     }
+
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
   },
 
   _isLeftMouseButton: function(e) {
@@ -73,27 +59,18 @@ var GrabieMouseMixin = {
       return;
     }
 
-    window.addEventListener('mouseup', this._handleGrabieMouseUp);
-    this.grabieMightClick = true;
-    setTimeout(
-      function() {
-        if (this.grabieMightClick) {
+    this.setGrabieState({
+      mouseDown: true,
+      grabStartX: e.pageX,
+      grabStartY: e.pageY,
+      grabX: e.pageX,
+      grabY: e.pageY
+    });
 
-          this.grabieMightClick = false;
-          window.addEventListener('mousemove', this._handleGrabieMouseMove);
-          this.setGrabieState({
-            mouseDown: true,
-            grabStartX: e.pageX,
-            grabStartY: e.pageY,
-            grabX: e.pageX,
-            grabY: e.pageY
-          });
-
-          this.handleGrabieGrab  && this.handleGrabieGrab(this.state.grabieMouse);
-        }
-      }.bind(this), 200
-    );
+    this.handleGrabieGrab  && this.handleGrabieGrab(this.state.grabieMouse);
 
     e.preventDefault();
+    e.stopPropagation();
+    return false;
   }
 }

@@ -20,6 +20,8 @@ var LayeredComponentMixin = {
         // everything on the page.  It's also better for accessibility and
         // makes stacking a snap (since components will stack in mount order).
         this._layer = document.createElement('div');
+        this._layer.style.height = '100%';
+        this._layer.style.width = '100%';
         document.body.appendChild(this._layer);
         this._renderLayer();
     },

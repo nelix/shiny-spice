@@ -1,11 +1,29 @@
 /** @jsx React.DOM */
 
 function extend(a, b){
-    for(var key in b)
-        if(b.hasOwnProperty(key))
-            a[key] = b[key];
-    return a;
+  for(var key in b)
+    if(b.hasOwnProperty(key))
+      a[key] = b[key];
+  return a;
 }
+
+var scrollOverlay = React.createClass({
+  mixins: [LayeredComponentMixin],
+
+  renderLayer: function() {
+    return (
+      <div
+        style={{width:'100%', height:'100%', display: 'block', zIndex:100000, left:0, top: 0, right:0, bottom:0, position: 'fixed'}}
+        onMouseUp={this.props.onMouseUp}
+        onMouseMove={this.props.onMouseMove}
+      />
+    );
+  },
+
+  render: function() { // TODO: shrug
+    return <span style={{display:'none'}}/>
+  }
+});
 
 var Scrollie = React.createClass({
   mixins: [GrabieMouseMixin],
@@ -13,8 +31,8 @@ var Scrollie = React.createClass({
   getInitialState: function () {
     return {
       scrollable: false,
-      scrolling: false,
       scrollbarHeight: 0,
+      nativeScrollbarWidth: 0,
       scrollbarOffset: this.props.options.verticalOffset
     };
   },
@@ -27,14 +45,6 @@ var Scrollie = React.createClass({
 
   componentDidUpdate: function () {
     this.createScrollbar();
-  },
-
-  hideNativeScrollbar: function(scrollableElement) {
-    var wrapperStyle = {
-      right: '-' + this.nativeScrollbarWidth
-    }
-
-    this.setState({wrapperStyle: wrapperStyle});
   },
 
   getNativeScrollbarWidth: function(scrollableElement) {
@@ -61,7 +71,6 @@ var Scrollie = React.createClass({
     var scrollbarOffset = scrollieWrapper.scrollTop;
     var pendingState = {};
 
-    this.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
     this.originalScrollbarHeight = scrollbarHeight;
 
     if (scrollbarHeight < this.props.options.minHeight) {
@@ -87,9 +96,8 @@ var Scrollie = React.createClass({
       // Scrolls are required, check if they dont exist
       if (!this.state.scrollable) {
         pendingState.scrollable = true;
-        pendingState.wrapperStyle = {right: this.nativeScrollbarWidth};
+        pendingState.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
       }
-
 
       if (this.state.nativeScrollbarOffset !== scrollbarOffset) {
         newScrollOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
@@ -114,67 +122,58 @@ var Scrollie = React.createClass({
   },
 
   // Mouse events
-  setScrollbarClicked: function() {
-    this.scrollbarClicked = true;
-  },
-
   handleGrabieGrab: function(mouse) {
-    this.startMouseY = mouse.grabStartY;
     this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
-    this.setState({scrolling: true});
     document.body.classList.add('no-select');
   },
 
-  handleGrabieMove: function(mouse) {
-    var mouseDelta = mouse.grabStartY - mouse.grabY;
-    var moveAmount = mouseDelta * this.scrollieTrackingRatio;
-    if (this.scrollbarClicked) {
+  handleGrabieMove: function(e, mouse) {
+    if (this.state.grabieMouse.mouseDown) {
+      var mouseDelta = mouse.grabStartY - mouse.grabY;
+      var moveAmount = mouseDelta * this.scrollieTrackingRatio;
       this.refs.scrollieWrapper.getDOMNode().scrollTop = this.startScrollbarOffset - moveAmount;
     }
   },
 
   handleGrabieRelease: function(mouse) {
-    this.setState({scrolling: false});
-    this.scrollbarClicked = false;
     document.body.classList.remove('no-select');
   },
 
   render: function() {
-    var scrollie = this.props.options,
-      thumbStyle = this.props.style || {height: this.state.scrollbarHeight},
-      scrollieContainerClass = (scrollie.prefix + '-container');
-
-    if (transformProperty) {
-      thumbStyle[transformProperty] = translate(0, this.state.scrollbarOffset);
-    } else {
-      thumbStyle.top = this.state.scrollbarOffset;
-    }
-
-    if (!scrollie.persistant) {scrollieContainerClass += ' ' + scrollie.prefix + '-on-hover';}
+    var thumbStyle = this.props.style || {height: this.state.scrollbarHeight};
+    var options = this.props.options;
 
     if (this.state.scrollable) {
+
+      if (transformProperty) {
+        thumbStyle[transformProperty] = translate(0, this.state.scrollbarOffset);
+      } else {
+        thumbStyle.top = this.state.scrollbarOffset;
+      }
+
       return (
-        <div ref="scrollieContainer" className={scrollieContainerClass} onScroll={this.handleScroll}>
-          <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'} style={this.state.wrapperStyle}>
-            <div ref="scrollieItems" className={scrollie.prefix + '-items has-scrollbar'}>
+        <div ref="scrollieContainer" className={options.prefix + '-container' + (options.persistant ? options.prefix + '-on-hover' : '')} onScroll={this.handleScroll}>
+          <div ref="scrollieWrapper" className={options.prefix + '-wrapper'} style={{right: this.state.nativeScrollbarWidth}}>
+            <div ref="scrollieItems" className={options.prefix + '-items has-scrollbar'}>
               {this.props.children}
             </div>
           </div>
-          <div className={scrollie.prefix + '-scrollbar'}>
-              <div className={scrollie.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this.setScrollbarClicked}></div>
+          <div className={options.prefix + '-scrollbar'}>
+            <div className={options.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this._handleGrabieMouseDown}></div>
+            {this.state.grabieMouse.mouseDown && <scrollOverlay onMouseUp={this._handleGrabieMouseUp} onMouseMove={this._handleGrabieMouseMove}/>}
           </div>
         </div>
       );
     } else {
       return (
-        <div ref="scrollieContainer" className={scrollie.prefix + '-container'}>
-          <div ref="scrollieWrapper" className={scrollie.prefix + '-wrapper'}>
-            <div ref="scrollieItems" className={scrollie.prefix + '-items'}>
+        <div ref="scrollieContainer" className={options.prefix + '-container'}>
+          <div ref="scrollieWrapper" className={options.prefix + '-wrapper'}>
+            <div ref="scrollieItems" className={options.prefix + '-items'}>
               {this.props.children}
             </div>
           </div>
         </div>
-      )
+      );
     }
   }
 });

@@ -1,5 +1,4 @@
-.cf:before,
-.cf:after {
+.cf:before, .cf:after {
     content: " ";
     display: table;
 }
@@ -7,10 +6,17 @@
 .cf:after {
     clear: both;
 }
+
 .sortie-column {
   float: left;
+  width: 29%;
+  height: 100%;
+  margin: 0 2%;
+  background: #FFEE94;
 }
 
 .boardie {
   float: left;
+  width: 100%;
+  height: 100%;
 }
