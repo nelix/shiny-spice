@@ -7,24 +7,6 @@ function extend(a, b){
   return a;
 }
 
-var scrollOverlay = React.createClass({
-  mixins: [LayeredComponentMixin],
-
-  renderLayer: function() {
-    return (
-      <div
-        style={{cursor: '-webkit-grabbing', zIndex:100000, left:0, top: 0, right:0, bottom:0, position: 'fixed'}}
-        onMouseUp={this.props.onMouseUp}
-        onMouseMove={this.props.onMouseMove}
-      />
-    );
-  },
-
-  render: function() { // TODO: shrug
-    return <span style={{display:'none'}}/>
-  }
-});
-
 var Scrollie = React.createClass({
   mixins: [GrabieMouseMixin],
 
@@ -160,7 +142,7 @@ var Scrollie = React.createClass({
           </div>
           <div className={options.prefix + '-scrollbar'}>
             <div className={options.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this._handleGrabieMouseDown}></div>
-            {this.state.grabieMouse.mouseDown && <scrollOverlay onMouseUp={this._handleGrabieMouseUp} onMouseMove={this._handleGrabieMouseMove}/>}
+            {this.state.grabieMouse.mouseDown && <Overlay onMouseUp={this._handleGrabieMouseUp} onMouseMove={this._handleGrabieMouseMove}/>}
           </div>
         </div>
       );

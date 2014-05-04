@@ -80,7 +80,7 @@ var Grabbable = React.createClass({
       );
     } else {
       return (
-        <Grabber
+        <Overlay
             style={{width: this.rect.width, height: this.rect.height}}
             x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.rect.left)}
             y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.rect.top)}
@@ -89,7 +89,7 @@ var Grabbable = React.createClass({
             onMouseUp={this._handleGrabieMouseUp}
           >
           {React.Children.only(this.props.children)}
-        </Grabber>
+        </Overlay>
       );
     }
 
