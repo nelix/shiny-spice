@@ -84,6 +84,7 @@ var Grabbable = React.createClass({
             style={{width: this.rect.width, height: this.rect.height}}
             x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.rect.left)}
             y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.rect.top)}
+            className={'grabie-grabbable grabie-grabbing'}
             rects={this.rects}
             onMouseMove={this._handleGrabieMouseMove}
             onMouseUp={this._handleGrabieMouseUp}
