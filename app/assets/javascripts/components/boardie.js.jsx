@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+// https://twitter.com/mollyclare/status/462831500497391616
 
 function find(needle, haystack, attr) {
   attr = attr || 'id';

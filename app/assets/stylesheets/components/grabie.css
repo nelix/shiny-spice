@@ -1,13 +1,11 @@
 .grabie-grabbable {
-  -webkit-backface-visibility: hidden;
   cursor: -webkit-grab;
   z-index: 1;
 }
 
 .grabie-grabbable.grabie-grabbing {
   user-select: none;
-  -webkit-backface-visibility: hidden;
-  cursor: -webkit-grabbing;
+  opacity: 0.8;
   z-index: 3;
 }
 
@@ -24,7 +22,8 @@
   border-radius: 5px;
 }
 
-.grabbie-placeholder-sortie-column {#eh.. todo
+.grabbie-placeholder-sortie-column {
+  opacity: 0.8;
   background: darkgray;
   float: left;
 }

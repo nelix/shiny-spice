@@ -19,32 +19,24 @@ var GrabieMouseMixin = {
     };
   },
 
-  setGrabieState: function(state) {
-    var oldGrabieMouse = this.state.grabieMouse;
-    return this.setState({grabieMouse: extend(oldGrabieMouse, state)});
-  },
-
   _handleGrabieMouseUp: function (e) {
-    this.state.grabieMouse.mouseDown && this.setGrabieState({mouseDown: false});
+    if (this.state.grabieMouse.mouseDown) {
+      var oldGrabieMouse = this.state.grabieMouse;
+      oldGrabieMouse.mouseDown = false;
+      this.setState({grabieMouse: oldGrabieMouse});
+    }
     this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
+    return false;
   },
 
   _handleGrabieMouseMove: function (e) {
-    if (this.state.grabieMouse.mouseDown) {
 
-      var x = e.pageX;
-      var y = e.pageY;
+    var oldGrabieMouse = this.state.grabieMouse;
+    oldGrabieMouse.grabX = e.pageX;
+    oldGrabieMouse.grabY = e.pageY;
+    this.setState({grabieMouse: oldGrabieMouse});
 
-      this.setGrabieState({
-        grabX: x,
-        grabY: y
-      });
-
-      this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse);
-    }
-
-    e.preventDefault();
-    e.stopPropagation();
+    this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse);
     return false;
   },
 
@@ -59,18 +51,15 @@ var GrabieMouseMixin = {
       return;
     }
 
-    this.setGrabieState({
-      mouseDown: true,
-      grabStartX: e.pageX,
-      grabStartY: e.pageY,
-      grabX: e.pageX,
-      grabY: e.pageY
-    });
+    var oldGrabieMouse = this.state.grabieMouse;
+    oldGrabieMouse.mouseDown = true;
+    oldGrabieMouse.grabStartX = e.pageX;
+    oldGrabieMouse.grabStartY = e.pageY;
+    oldGrabieMouse.grabX = e.pageX;
+    oldGrabieMouse.grabY = e.pageY;
+    this.setState({grabieMouse: oldGrabieMouse});
 
     this.handleGrabieGrab  && this.handleGrabieGrab(this.state.grabieMouse);
-
-    e.preventDefault();
-    e.stopPropagation();
     return false;
   }
 }

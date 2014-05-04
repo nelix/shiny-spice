@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+// https://twitter.com/mollyclare/status/462831500497391616
 
 var Stackable = React.createClass({
 
@@ -28,7 +29,7 @@ var Stackable = React.createClass({
 
     if (this.props.overItemPosition !== false) {
       items.splice(this.props.overItemPosition, 0,
-        <span style={this.props.placeholderStyle} className="grabbie-placeholder" key={'gap'}></span>
+        <span style={{height: this.props.placeholderStyle.height}} className="grabie-grabbable grabbie-placeholder" key={'gap'}></span>
       );
     }
     return this.attachScrollie(items, {

@@ -13,7 +13,7 @@ var scrollOverlay = React.createClass({
   renderLayer: function() {
     return (
       <div
-        style={{width:'100%', height:'100%', display: 'block', zIndex:100000, left:0, top: 0, right:0, bottom:0, position: 'fixed'}}
+        style={{zIndex:100000, left:0, top: 0, right:0, bottom:0, position: 'fixed'}}
         onMouseUp={this.props.onMouseUp}
         onMouseMove={this.props.onMouseMove}
       />
