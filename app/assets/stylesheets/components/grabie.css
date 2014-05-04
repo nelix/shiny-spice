@@ -4,6 +4,7 @@
 }
 
 .grabie-grabbable.grabie-grabbing {
+  cursor: -webkit-grabbing;
   user-select: none;
   opacity: 0.8;
   z-index: 3;
