@@ -6,6 +6,31 @@ function extend(a, b){
     return a;
 }
 
+var velocity = new Array(5)
+
+function addToV(val){
+    // last in, first out
+    var arr = this.velocity;
+    arr = arr.slice(1, arr.length);
+    arr.push(val);
+    velocity = arr;
+}
+
+function velocityR(){
+    var sumX = 0;
+    var sumY = 0;
+
+    for (var i = 0; i < velocity.length -1; i++){
+      if ( velocity[i] ){
+        sumX        += (velocity[i+1].x - velocity[i].x);
+        sumY        += (velocity[i+1].y - velocity[i].y);
+      }
+    }
+
+    // return velocity in each direction.
+    return { x: sumX*0.5, y: sumY*0.5};
+  }
+
 var GrabieMouseMixin = {
   getInitialState: function () {
     return {
@@ -25,6 +50,7 @@ var GrabieMouseMixin = {
       oldGrabieMouse.mouseDown = false;
       this.setState({grabieMouse: oldGrabieMouse});
     }
+    velocity = new Array(5);
     this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
     return false;
   },
@@ -34,9 +60,9 @@ var GrabieMouseMixin = {
     var oldGrabieMouse = this.state.grabieMouse;
     oldGrabieMouse.grabX = e.pageX;
     oldGrabieMouse.grabY = e.pageY;
+    addToV({x: e.pageX, y:e.pageY})
     this.setState({grabieMouse: oldGrabieMouse});
-
-    this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse);
+    this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse, velocityR());
     return false;
   },
 

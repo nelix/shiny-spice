@@ -32,27 +32,6 @@ var RectMixin = {
 
 };
 
-var Grabber = React.createClass({
-  mixins: [LayeredComponentMixin],
-
-  propTypes: {
-    children: React.PropTypes.component.isRequired
-  },
-
-  renderLayer: function() {
-    return <div
-        style={{cursor: '-webkit-grabbing', zIndex:100000, left:0, top: 0, right:0, bottom:0, position: 'fixed'}}
-        onMouseUp={this.props.onMouseUp}
-        onMouseMove={this.props.onMouseMove}>
-      <Sprite style={this.props.style} x={this.props.x} y={this.props.y} className="grabie-grabbable grabie-grabbing">{React.Children.only(this.props.children)}</Sprite>
-    </div>
-  },
-
-  render: function() {
-    return <span style={{display:'none'}}/>
-  }
-});
-
 var Grabbable = React.createClass({
   mixins: [GrabieMouseMixin, RectMixin],
 
@@ -68,7 +47,8 @@ var Grabbable = React.createClass({
     this.props.onGrabieGrab && this.props.onGrabieGrab(this.props.position, this.rect.width, this.rect.height);
   },
 
-  handleGrabieMove: function (e, state) {
+  handleGrabieMove: function (e, state, v) {
+    this.v = v;
     this.props.onGrabieMove && this.props.onGrabieMove(e, state);
   },
 
@@ -84,6 +64,7 @@ var Grabbable = React.createClass({
             style={{width: this.rect.width, height: this.rect.height}}
             x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.rect.left)}
             y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.rect.top)}
+            v={this.v}
             className={'grabie-grabbable grabie-grabbing'}
             rects={this.rects}
             onMouseMove={this._handleGrabieMouseMove}
