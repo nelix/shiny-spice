@@ -43,7 +43,8 @@ var Sprite = React.createClass({
 
     if (transformProperty) {
       this.everWas3d = true;
-      style[transformProperty] = translate(this.props.x, this.props.y) + ' rotate(' + ((this.props.v.x) ? this.props.v.x/5 : 0) + 'deg)';
+      var vx = ((this.props.v.x) ?  Math.max(-30, Math.min(this.props.v.x, 30)) /5 : 0);
+      style[transformProperty] = translate(this.props.x, this.props.y) + ' rotate(' + vx + 'deg)';
     } else {
       style.position = 'absolute';
       style.left = this.props.x;

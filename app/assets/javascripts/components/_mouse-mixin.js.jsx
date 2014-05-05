@@ -6,11 +6,11 @@ function extend(a, b){
     return a;
 }
 
-var velocity = new Array(5)
+var velocity = new Array(5);
 
 function addToV(val){
     // last in, first out
-    var arr = this.velocity;
+    var arr = velocity;
     arr = arr.slice(1, arr.length);
     arr.push(val);
     velocity = arr;
@@ -22,8 +22,8 @@ function velocityR(){
 
     for (var i = 0; i < velocity.length -1; i++){
       if ( velocity[i] ){
-        sumX        += (velocity[i+1].x - velocity[i].x);
-        sumY        += (velocity[i+1].y - velocity[i].y);
+        sumX += (velocity[i+1].x - velocity[i].x);
+        sumY += (velocity[i+1].y - velocity[i].y);
       }
     }
 
