@@ -39,31 +39,29 @@ function mouseOverRightHalf(e, rect) {
 var StackieRectKeeperMixin = {
   childRects: {},
   getInitialState: function() {
-    return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null};
+    return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, dragging: false};
   },
 
-  handleRect: function(component, rect, columnKey) {
-    this.childRects[component.props.key] = {component: component, rect: rect, itemKey: component.props.key, columnKey: columnKey};
+  handleBoardieMove: function(columnId, taskKey, position, mouseEvent) {
+    //this.props.onGrabOver && this.props.onGrabOver(this.state);
   },
 
-  handleBoardieMove: function(a,e) {
-    $.each(this.childRects, function(key, rect) {
-      if (rect.component.isEventInRect(e, rect.rect)) {
-        var position = rect.component.props.position;
-        mouseOverBottomHalf(e, rect.rect) && position++
-        if ((this.state.overItemKey !== rect.itemKey) || (this.state.overColumnKey !== rect.columnKey) || (this.state.overItemPosition !== position)) {
-          this.setState({overItemKey: rect.itemKey, overColumnKey: rect.columnKey, overItemPosition: position});
-          this.props.onGrabOver && this.props.onGrabOver(this.state);
-        }
-      }
-    }.bind(this));
+  handleBoardieHover: function(columnKey, taskKey, position, mouseEvent) {
+    //mouseOverBottomHalf(mouseEvent, mouseEvent.target.getBoundingClientRect()) && position++
+    //this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
   },
 
-  handleGrab: function(colId, key, position, width, height) {
-    this.setState({dragItemKey: key, overItemPosition: position, overColumnKey: colId, dragItemWidth: width, dragItemHeight: height});
+  handleGrab: function(columnKey, taskKey, position, width, height) {
+    this.holdCheck = setTimeout(function() {
+      //this.setState({dragItemKey: taskKey, overItemPosition: position, overColumnKey: columnKey, dragItemWidth: width, dragItemHeight: height});
+      //this.setState({dragging: true})
+    }, 1000);
   },
 
   handleDrop: function(key) {
+    clearTimeout(this.holdCheck);
+    this.setState({dragging: false});
+
     if (this.state.dragItemKey !== false && this.state.overItemPosition !== false &&
         this.state.overColumnKey !== false && this.state.overItemPosition !== null) {
 
@@ -121,16 +119,11 @@ var Boardie = React.createClass({
     }
   },
 
-  handleColumnMove: function(a,e ) {
-    $.each(this.columnRects, function(key, rect) {
-      if (rect.component.isEventInRect(e, rect.rect)) {
-        var position = rect.component.props.position;
-        mouseOverRightHalf(e, rect.rect) && position++;
-        if ( (this.state.overColumnPosition !== position)) {
-          this.setState({overColumnPosition: position});
-        }
-      }
-    }.bind(this));
+  handleColumnHover: function(columnKey, mouseEvent) {
+    var position = columnKey;
+    mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect()) && position++;
+    console.log(position)
+    this.setState({overColumnPosition: position});
   },
 
   handleColumnGrab: function(key, position, width, height) {
@@ -156,7 +149,8 @@ var Boardie = React.createClass({
           key={column.id}
           onGrabieGrab={this.handleColumnGrab.bind(null, column.id)}
           onGrabieRelease={this.handleColumnRelease.bind(null, column.id)}
-          onGrabieMove={this.handleColumnMove.bind(null, column.id)}
+          onMouseMove={this.handleColumnHover.bind(null, i)}
+          onMouseOut={this.handleColumnLeave}
           onRect={this.handleColumnRect}>
         <Stackable
             overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition}
@@ -164,7 +158,9 @@ var Boardie = React.createClass({
             overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id}
             onGrabieRelease={this.handleDrop}
             onGrabieGrab={this.handleGrab.bind(null, column.id)}
-            onGrabieMove={this.handleBoardieMove}
+            onGrabieMove={this.handleBoardieMove.bind(null, column.id)}
+            onGrabieHover={this.handleBoardieHover.bind(null, column.id)}
+            dragging={this.state.dragging}
             onRect={this.handleRect}>
           {items}
         </Stackable>

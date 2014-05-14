@@ -36,6 +36,7 @@ var GrabieMouseMixin = {
     return {
       grabieMouse: {
         mouseDown: false,
+        mouseLongDown: false,
         grabX: 0,
         grabY: 0,
         grabStartX: 0,
@@ -48,6 +49,8 @@ var GrabieMouseMixin = {
     if (this.state.grabieMouse.mouseDown) {
       var oldGrabieMouse = this.state.grabieMouse;
       oldGrabieMouse.mouseDown = false;
+      clearTimeout(this.longDown);
+      oldGrabieMouse.mouseLongDown = false;
       this.setState({grabieMouse: oldGrabieMouse});
     }
     velocity = new Array(5);
@@ -56,7 +59,7 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseMove: function (e) {
-
+    console.log(this.state.grabieMouse.mouseLongDown)
     var oldGrabieMouse = this.state.grabieMouse;
     oldGrabieMouse.grabX = e.pageX;
     oldGrabieMouse.grabY = e.pageY;
@@ -77,6 +80,8 @@ var GrabieMouseMixin = {
       return;
     }
 
+    this.longDown = window.setTimeout(function() {oldGrabieMouse.mouseLongDown = false}, 200)
+
     var oldGrabieMouse = this.state.grabieMouse;
     oldGrabieMouse.mouseDown = true;
     oldGrabieMouse.grabStartX = e.pageX;
@@ -87,5 +92,5 @@ var GrabieMouseMixin = {
 
     this.handleGrabieGrab  && this.handleGrabieGrab(this.state.grabieMouse);
     return false;
-  }
+  },
 }

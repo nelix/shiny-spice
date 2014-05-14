@@ -2,6 +2,7 @@
 // https://twitter.com/mollyclare/status/462831500497391616
 
 var RectMixin = {
+  // this is what checks is the mouse in position from boardie.js
   isEventInRect: function(e, rect) {
     return (e.pageX >= rect.left && e.pageX <= rect.right) && (e.pageY >= rect.top && e.pageY <= rect.bottom);
   },
@@ -40,11 +41,15 @@ var Grabbable = React.createClass({
   },
 
   handleGrabieRelease: function (state) {
+    $(document).unbind("mousemove", this._handleGrabieMouseMove);
+    $(document).unbind("mouseup", this._handleGrabieMouseUp);
     this.props.onGrabieRelease && this.props.onGrabieRelease(state);
   },
 
   handleGrabieGrab: function (state) {
     this.props.onGrabieGrab && this.props.onGrabieGrab(this.props.position, this.rect.width, this.rect.height);
+    $(document).bind("mousemove", this._handleGrabieMouseMove);
+    $(document).bind("mouseup", this._handleGrabieMouseUp);
   },
 
   handleGrabieMove: function (e, state, v) {
@@ -53,15 +58,15 @@ var Grabbable = React.createClass({
   },
 
   render: function () {
-
-    if (!this.state.grabieMouse.mouseDown) {
+    
+    if (!this.state.grabieMouse.mouseDown && this.state.grabieMouse.mouseDown === true) {
       return this.transferPropsTo(
         <div onMouseDown={this._handleGrabieMouseDown} className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
       );
     } else {
       return (
         <Overlay
-            style={{width: this.rect.width, height: this.rect.height}}
+            style={{width: this.rect.width, height: this.rect.height, pointerEvents: 'none'}}
             x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.rect.left)}
             y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.rect.top)}
             v={this.v}

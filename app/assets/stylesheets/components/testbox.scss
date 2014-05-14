@@ -5,7 +5,16 @@
     color: #FFF; padding: 1.5em;
     text-align: center;
     border-radius: 4px;
+
+    .overlay & {
+        pointer-events: none;
+        * {
+           pointer-events: none; 
+        }
+    }
 }
+
+.overlay {pointer-events: none;}
 
 .grabie-grabbing > .testbox {
     background: #0AF;
