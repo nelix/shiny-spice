@@ -43,23 +43,20 @@ var StackieRectKeeperMixin = {
   },
 
   handleBoardieMove: function(columnId, taskKey, position, mouseEvent) {
-    //this.props.onGrabOver && this.props.onGrabOver(this.state);
+    this.props.onGrabOver && this.props.onGrabOver(this.state);
   },
 
   handleBoardieHover: function(columnKey, taskKey, position, mouseEvent) {
-    //mouseOverBottomHalf(mouseEvent, mouseEvent.target.getBoundingClientRect()) && position++
-    //this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
+    mouseOverBottomHalf(mouseEvent, mouseEvent.target.getBoundingClientRect()) && position++
+    this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
   },
 
   handleGrab: function(columnKey, taskKey, position, width, height) {
-    this.holdCheck = setTimeout(function() {
-      //this.setState({dragItemKey: taskKey, overItemPosition: position, overColumnKey: columnKey, dragItemWidth: width, dragItemHeight: height});
-      //this.setState({dragging: true})
-    }, 1000);
+    this.setState({dragItemKey: taskKey, overItemPosition: position, overColumnKey: columnKey, dragItemWidth: width, dragItemHeight: height});
+    this.setState({dragging: true});
   },
 
   handleDrop: function(key) {
-    clearTimeout(this.holdCheck);
     this.setState({dragging: false});
 
     if (this.state.dragItemKey !== false && this.state.overItemPosition !== false &&
@@ -122,7 +119,6 @@ var Boardie = React.createClass({
   handleColumnHover: function(columnKey, mouseEvent) {
     var position = columnKey;
     mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect()) && position++;
-    console.log(position)
     this.setState({overColumnPosition: position});
   },
 
@@ -147,8 +143,8 @@ var Boardie = React.createClass({
           className="sortie-column"
           position={i}
           key={column.id}
-          onGrabieGrab={this.handleColumnGrab.bind(null, column.id)}
-          onGrabieRelease={this.handleColumnRelease.bind(null, column.id)}
+          onGrabieLongGrab={this.handleColumnGrab.bind(null, column.id)}
+          onGrabieDragRelease={this.handleColumnRelease.bind(null, column.id)}
           onMouseMove={this.handleColumnHover.bind(null, i)}
           onMouseOut={this.handleColumnLeave}
           onRect={this.handleColumnRect}>
@@ -156,8 +152,8 @@ var Boardie = React.createClass({
             overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition}
             placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}}
             overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id}
-            onGrabieRelease={this.handleDrop}
-            onGrabieGrab={this.handleGrab.bind(null, column.id)}
+            onGrabieDragRelease={this.handleDrop}
+            onGrabieLongGrab={this.handleGrab.bind(null, column.id)}
             onGrabieMove={this.handleBoardieMove.bind(null, column.id)}
             onGrabieHover={this.handleBoardieHover.bind(null, column.id)}
             dragging={this.state.dragging}

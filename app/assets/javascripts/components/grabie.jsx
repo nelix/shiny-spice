@@ -40,16 +40,14 @@ var Grabbable = React.createClass({
     children: React.PropTypes.component.isRequired
   },
 
-  handleGrabieRelease: function (state) {
+  handleGrabieDragRelease: function (state) {
     $(document).unbind("mousemove", this._handleGrabieMouseMove);
-    $(document).unbind("mouseup", this._handleGrabieMouseUp);
-    this.props.onGrabieRelease && this.props.onGrabieRelease(state);
+    this.props.onGrabieDragRelease && this.props.onGrabieDragRelease(state);
   },
 
-  handleGrabieGrab: function (state) {
-    this.props.onGrabieGrab && this.props.onGrabieGrab(this.props.position, this.rect.width, this.rect.height);
-    $(document).bind("mousemove", this._handleGrabieMouseMove);
-    $(document).bind("mouseup", this._handleGrabieMouseUp);
+  handleGrabieLongGrab: function (state) {
+    this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.rect.width, this.rect.height);
+    $(document).bind("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
   },
 
   handleGrabieMove: function (e, state, v) {
@@ -58,8 +56,7 @@ var Grabbable = React.createClass({
   },
 
   render: function () {
-    
-    if (!this.state.grabieMouse.mouseDown && this.state.grabieMouse.mouseDown === true) {
+    if (!this.state.grabieMouse.mouseLongDown) {
       return this.transferPropsTo(
         <div onMouseDown={this._handleGrabieMouseDown} className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
       );

@@ -37,6 +37,7 @@ var GrabieMouseMixin = {
       grabieMouse: {
         mouseDown: false,
         mouseLongDown: false,
+        dragging: false,
         grabX: 0,
         grabY: 0,
         grabStartX: 0,
@@ -46,25 +47,45 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseUp: function (e) {
+    // temporary
+    $(document).unbind("mouseup", this._handleGrabieMouseUp);
+
+    var oldGrabieMouse = this.state.grabieMouse;
+    var initialGrabieMouse = $.extend({}, this.state.grabieMouse); // this can be changed to use ._clone()
+
     if (this.state.grabieMouse.mouseDown) {
-      var oldGrabieMouse = this.state.grabieMouse;
       oldGrabieMouse.mouseDown = false;
       clearTimeout(this.longDown);
       oldGrabieMouse.mouseLongDown = false;
-      this.setState({grabieMouse: oldGrabieMouse});
     }
+
+    if (this.state.grabieMouse.dragging) {
+      oldGrabieMouse.dragging = false;
+    }
+
+    // update grabieMouse
+    this.setState({grabieMouse: oldGrabieMouse});
+
     velocity = new Array(5);
+
+    // Mouseup
     this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
+
+    // Drag release
+    if (initialGrabieMouse.dragging) {
+      this.handleGrabieDragRelease && this.handleGrabieDragRelease(this.state.grabieMouse);
+    }
+
     return false;
   },
 
   _handleGrabieMouseMove: function (e) {
-    console.log(this.state.grabieMouse.mouseLongDown)
     var oldGrabieMouse = this.state.grabieMouse;
     oldGrabieMouse.grabX = e.pageX;
     oldGrabieMouse.grabY = e.pageY;
     addToV({x: e.pageX, y:e.pageY})
     this.setState({grabieMouse: oldGrabieMouse});
+    if (oldGrabieMouse.mouseLongDown) {this._handleGrabieMouseDrag()}
     this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse, velocityR());
     return false;
   },
@@ -75,12 +96,17 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseDown: function(e) {
+    // This is some temporary disgusting way to make sure mouseUp is always called, so we can cancel events regardless
+    $(document).bind("mouseup", this._handleGrabieMouseUp);
 
     if (this._isLeftMouseButton(e)) {
       return;
     }
 
-    this.longDown = window.setTimeout(function() {oldGrabieMouse.mouseLongDown = false}, 200)
+    this.longDown = window.setTimeout(function() {
+      oldGrabieMouse.mouseLongDown = true;
+      this._handleGrabieMouseLongDown(e);
+    }.bind(this), 200)
 
     var oldGrabieMouse = this.state.grabieMouse;
     oldGrabieMouse.mouseDown = true;
@@ -90,7 +116,19 @@ var GrabieMouseMixin = {
     oldGrabieMouse.grabY = e.pageY;
     this.setState({grabieMouse: oldGrabieMouse});
 
-    this.handleGrabieGrab  && this.handleGrabieGrab(this.state.grabieMouse);
+    this.handleGrabieGrab && this.handleGrabieGrab(this.state.grabieMouse);
     return false;
   },
+
+  _handleGrabieMouseLongDown: function(e) {
+    this.handleGrabieLongGrab && this.handleGrabieLongGrab(this.state.grabieMouse);
+  },
+
+  _handleGrabieMouseDrag: function(e) {
+    var oldGrabieMouse = this.state.grabieMouse;
+    oldGrabieMouse.dragging = true;
+    this.setState({grabieMouse: oldGrabieMouse});
+
+    this.handleGrabieDrag && this.handleGrabieDrag(this.state.grabieMouse);
+  }
 }
