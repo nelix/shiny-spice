@@ -43,58 +43,17 @@ var StackieRectKeeperMixin = {
   },
 
   handleBoardieMove: function(columnId, taskKey, mouseEvent) {
+
+    // Below is IE 10 only. Need to add pointer events detection (from modernizr, the false positives is crazy)
     if (document.msElementsFromPoint) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
       
-      var hitOne = false;
+      // This needs to be fixed to be something more flexible, is pretty gross atm
       if (underlyingNodeList && underlyingNodeList[3].className == 'testbox') {
-        //underlyingNodeList[3].style.background = 'red';
-
-        console.log(underlyingNodeList[4].className)
-        
-        $(underlyingNodeList[4]).trigger('mouseover');
-        //$(underlyingNodeList[1], underlyingNodeList[2]).css('display', 'block');
-        //for (var i = 0; i < underlyingNodeList.length; i++) {
-          //if (underlyingNodeList[i].className == 'testbox') {
-            
-
-          /*
-            if (!hitOne) {
-
-              underlyingNodeList[i].style.display = 'none';
-              
-              
-              underlyingNodeListTwo = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
-
-              for (var k = 0; k < underlyingNodeListTwo.length; k++) {
-                if (underlyingNodeListTwo[k].className == 'testbox') {
-                  elem = underlyingNodeListTwo[k];
-                  console.log('hit')
-                  setTimeout(function() {
-                    console.log('yes')
-                    underlyingNodeListTwo[0].style.display = 'block'; 
-                    underlyingNodeListTwo[1].style.display = 'block'; 
-                    underlyingNodeListTwo[2].style.display = 'block'; 
-                    underlyingNodeListTwo[3].style.display = 'block'; 
-                    underlyingNodeListTwo[4].style.display = 'block'; 
-                    hitOne = false 
-                  }.bind(this,elem), 10)
-
-                }
-              }
-
-              
-
-
-              
-
-              hitOne = true;
-            }*/
-          //}
-        //}
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("mousemove",true,true);
+        underlyingNodeList[4].dispatchEvent(event);
       }
-
-
     }
 
     this.props.onGrabOver && this.props.onGrabOver(this.state);
