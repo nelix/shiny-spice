@@ -42,12 +42,69 @@ var StackieRectKeeperMixin = {
     return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, dragging: false};
   },
 
-  handleBoardieMove: function(columnId, taskKey, position, mouseEvent) {
+  handleBoardieMove: function(columnId, taskKey, mouseEvent) {
+    if (document.msElementsFromPoint) {
+      var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
+      
+      var hitOne = false;
+      if (underlyingNodeList && underlyingNodeList[3].className == 'testbox') {
+        //underlyingNodeList[3].style.background = 'red';
+
+        console.log(underlyingNodeList[4].className)
+        
+        $(underlyingNodeList[4]).trigger('mouseover');
+        //$(underlyingNodeList[1], underlyingNodeList[2]).css('display', 'block');
+        //for (var i = 0; i < underlyingNodeList.length; i++) {
+          //if (underlyingNodeList[i].className == 'testbox') {
+            
+
+          /*
+            if (!hitOne) {
+
+              underlyingNodeList[i].style.display = 'none';
+              
+              
+              underlyingNodeListTwo = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
+
+              for (var k = 0; k < underlyingNodeListTwo.length; k++) {
+                if (underlyingNodeListTwo[k].className == 'testbox') {
+                  elem = underlyingNodeListTwo[k];
+                  console.log('hit')
+                  setTimeout(function() {
+                    console.log('yes')
+                    underlyingNodeListTwo[0].style.display = 'block'; 
+                    underlyingNodeListTwo[1].style.display = 'block'; 
+                    underlyingNodeListTwo[2].style.display = 'block'; 
+                    underlyingNodeListTwo[3].style.display = 'block'; 
+                    underlyingNodeListTwo[4].style.display = 'block'; 
+                    hitOne = false 
+                  }.bind(this,elem), 10)
+
+                }
+              }
+
+              
+
+
+              
+
+              hitOne = true;
+            }*/
+          //}
+        //}
+      }
+
+
+    }
+
     this.props.onGrabOver && this.props.onGrabOver(this.state);
   },
 
   handleBoardieHover: function(columnKey, taskKey, position, mouseEvent) {
-    mouseOverBottomHalf(mouseEvent, mouseEvent.target.getBoundingClientRect()) && position++
+    this.rectHover = true;
+    var targetBoundingRect = mouseEvent.target.getBoundingClientRect();
+
+    mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++
     this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
   },
 

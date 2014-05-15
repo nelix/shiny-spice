@@ -12,6 +12,7 @@ var Overlay = React.createClass({
     var sprite = null;
 
     if (this.props.children) {
+      var dragImageClass = this.props.className;
       sprite = <Sprite style={this.props.style} v={this.props.v} x={this.props.x} y={this.props.y} className={this.props.className}>{React.Children.only(this.props.children)}</Sprite>;
     }
 
