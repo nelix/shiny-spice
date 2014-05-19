@@ -3,8 +3,7 @@
 var columns = [
   {id: 2, title: 'hats', items: [4, 5, 6]},
   {id: 3, title: 'fake hats', items: [9, 10]},
-  {id: 4, title: 'I dunno, crabs?', items: [24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35]},
-  {id: 5, title: 'I dunno, crabs?', items: [14, 15, 16, 17, 18]}
+  {id: 4, title: 'I dunno, crabs?', items: [24, 25, 27, 28, 29, 30, 31, 32, 33, 34, 35]}
 ];
 
 var items = [
@@ -33,6 +32,21 @@ var items = [
   {id: 34, text: 'Rabit Skin2'},
   {id: 35, text: 'Space needle@?'}
 ];
+
+for (var i=36; i< 100; i++) {
+  items.push({id: i, text: 'test item' + i});
+  columns[0].items.push(i);
+}
+
+for (var i=101; i< 200; i++) {
+  items.push({id: i, text: 'test item' + i});
+  columns[1].items.push(i);
+}
+
+for (var i=201; i< 300; i++) {
+  items.push({id: i, text: 'test item' + i});
+  columns[2].items.push(i);
+}
 
 function buildTest(data) {
   return <TestBox key={data.id} text={data.text}/>;
