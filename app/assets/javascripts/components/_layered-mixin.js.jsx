@@ -16,13 +16,25 @@
  */
 var LayeredComponentMixin = {
     componentDidMount: function() {
+        var layerStyle = this.props.wrapperStyle;
+
+
         // Appending to the body is easier than managing the z-index of
         // everything on the page.  It's also better for accessibility and
         // makes stacking a snap (since components will stack in mount order).
         this._layer = document.createElement('div');
-        this._layer.style.height = '100%';
-        this._layer.style.width = '100%';
-        document.body.appendChild(this._layer);
+        var layer = this._layer;
+        layer.style.height = '100%';
+        layer.style.width = '100%';
+
+        if (layerStyle) {
+            Object.keys(layerStyle).forEach(function(parameter) {
+                layer.style[parameter] = layerStyle[parameter];
+            });
+        }
+
+
+        document.body.appendChild(layer);
         this._renderLayer();
     },
 

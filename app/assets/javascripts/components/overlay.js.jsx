@@ -4,7 +4,7 @@ var Overlay = React.createClass({
   mixins: [LayeredComponentMixin],
 
   propTypes: {
-    children: React.PropTypes.component.isRequired
+    //children: React.PropTypes.component.isRequired
   },
 
   renderLayer: function() {

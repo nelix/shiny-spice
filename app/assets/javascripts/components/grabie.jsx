@@ -40,14 +40,18 @@ var Grabbable = React.createClass({
     children: React.PropTypes.component.isRequired
   },
 
-  handleGrabieDragRelease: function (state) {
+  handleGrabieRelease: function(state) {
     $(document).unbind("mousemove", this._handleGrabieMouseMove);
+    this.props.onGrabieRelease && this.props.onGrabieRelease(state);
+  },
+
+  handleGrabieDragRelease: function (state) {
     this.props.onGrabieDragRelease && this.props.onGrabieDragRelease(state);
   },
 
   handleGrabieLongGrab: function (state) {
     this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.rect.width, this.rect.height);
-    $(document).bind("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
+    $(document).on("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
   },
 
   handleGrabieMove: function (e, state, v) {
@@ -71,6 +75,7 @@ var Grabbable = React.createClass({
             rects={this.rects}
             onMouseMove={this._handleGrabieMouseMove}
             onMouseUp={this._handleGrabieMouseUp}
+            wrapperStyle={{pointerEvents: 'none'}}
           >
           {React.Children.only(this.props.children)}
         </Overlay>
