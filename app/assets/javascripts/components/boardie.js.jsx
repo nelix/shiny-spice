@@ -46,7 +46,7 @@ var StackieRectKeeperMixin = {
     this.pointerEventsFallback = document.msElementsFromPoint;
   },
 
-  handleIeHover: function(columnId, taskKey, mouseEvent) {
+  handleTaskIeHover: function(columnId, taskKey, mouseEvent) {
     // Below is IE 10 only. Need to add pointer events detection (from modernizr, the false positives is crazy)
     if (this.pointerEventsFallback && this.state.itemDragging) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
@@ -215,7 +215,7 @@ var Boardie = React.createClass({
             onGrabieDragRelease={this.handleTaskDrop}
             onGrabieRelease={this.handleTaskRelease}
             onGrabieLongGrab={this.handleTaskGrab.bind(null, column.id)}
-            onGrabieMove={this.handleIeHover.bind(null, column.id)}
+            onGrabieMove={this.handleTaskIeHover.bind(null, column.id)}
             onGrabieHover={this.handleTaskHover.bind(null, column.id)}
             dragging={this.state.itemDragging}
             autoScrollSpeed={this.state.autoScrollSpeed}
