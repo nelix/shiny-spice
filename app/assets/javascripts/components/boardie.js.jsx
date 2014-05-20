@@ -42,9 +42,13 @@ var StackieRectKeeperMixin = {
     return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false};
   },
 
-  handleTaskMove: function(columnId, taskKey, mouseEvent) {
+  componentWillMount: function() {
+    this.pointerEventsFallback = document.msElementsFromPoint;
+  },
+
+  handleIeHover: function(columnId, taskKey, mouseEvent) {
     // Below is IE 10 only. Need to add pointer events detection (from modernizr, the false positives is crazy)
-    if (document.msElementsFromPoint && this.state.itemDragging) {
+    if (this.pointerEventsFallback && this.state.itemDragging) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
       
       // This needs to be fixed to be something more flexible, is pretty gross atm
@@ -95,6 +99,10 @@ var Boardie = React.createClass({
     return {dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0}
   },
 
+  componentWillMount: function() {
+    this.pointerEventsFallback = document.msElementsFromPoint;
+  },
+
   getItems: function(ids) {
     return ids.map(
       function(id) {
@@ -133,9 +141,9 @@ var Boardie = React.createClass({
     }
   },
 
-  handleGrabieMove: function(mouseEvent) {
+  handleIeHover: function(mouseEvent) {
     // IE10 fix
-    if (document.msElementsFromPoint && this.state.columnDragging) {
+    if (this.pointerEventsFallback) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
       
       if (underlyingNodeList) {
@@ -153,26 +161,24 @@ var Boardie = React.createClass({
   },
 
   handleColumnHover: function(columnKey, columnId, mouseEvent) {
-    if (this.state.columnDragging) {
-      // Pop item into last position in column
-      if (this.state.overColumnKey !== columnKey) {
-        this.setState({overColumnKey: columnKey, overItemPosition: columns[columnId].items.length+1});
-      }
-
-      var position = columnId;
-
-      if (this.state.handleColumnHoverPosition === false || this.state.handleColumnHoverLeft === true) {
-        stateLeft = this.state.handleColumnHoverPosition;
-      } else {
-        stateLeft = mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect());
-      }
-
-      stateLeft && position++;
-      
-      this.setState({overColumnPosition: position});
-
-      this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, this.getDOMNode().getBoundingClientRect())});
+    // Pop item into last position in column
+    if (this.state.overColumnKey !== columnKey) {
+      this.setState({overColumnKey: columnKey, overItemPosition: columns[columnId].items.length+1});
     }
+
+    var position = columnId;
+
+    if (this.state.handleColumnHoverPosition === false || this.state.handleColumnHoverLeft === true) {
+      stateLeft = this.state.handleColumnHoverPosition;
+    } else {
+      stateLeft = mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect());
+    }
+
+    stateLeft && position++;
+    
+    this.setState({overColumnPosition: position});
+
+    this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, this.getDOMNode().getBoundingClientRect())});
   },
 
   handleColumnGrab: function(key, position, width, height) {
@@ -198,8 +204,8 @@ var Boardie = React.createClass({
           key={column.id}
           onGrabieLongGrab={this.handleColumnGrab.bind(null, column.id)}
           onGrabieDragRelease={this.handleColumnRelease.bind(null, column.id)}
-          onMouseMove={this.handleColumnHover.bind(null, column.id, i)}
-          onGrabieMove={this.handleGrabieMove}
+          onMouseMove={this.state.columnDragging && this.handleColumnHover.bind(null, column.id, i)}
+          onGrabieMove={this.state.columnDragging && this.handleIeHover}
           onMouseOut={this.handleColumnLeave}
           onRect={this.handleColumnRect}>
         <Stackable
@@ -209,7 +215,7 @@ var Boardie = React.createClass({
             onGrabieDragRelease={this.handleTaskDrop}
             onGrabieRelease={this.handleTaskRelease}
             onGrabieLongGrab={this.handleTaskGrab.bind(null, column.id)}
-            onGrabieMove={this.handleTaskMove.bind(null, column.id)}
+            onGrabieMove={this.handleIeHover.bind(null, column.id)}
             onGrabieHover={this.handleTaskHover.bind(null, column.id)}
             dragging={this.state.itemDragging}
             autoScrollSpeed={this.state.autoScrollSpeed}
