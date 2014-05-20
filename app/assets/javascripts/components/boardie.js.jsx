@@ -172,13 +172,13 @@ var Boardie = React.createClass({
       if (underlyingNodeList) {
         Object.keys(underlyingNodeList).forEach(function(key) {
             if (underlyingNodeList[key].className.indexOf('grabie-grabbable sortie-column') > -1) {
-              that.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, underlyingNodeList[key].getBoundingClientRect())});
+              this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, underlyingNodeList[key].getBoundingClientRect())});
               
               var event = document.createEvent("HTMLEvents");
               event.initEvent("mousemove",true,true);
               underlyingNodeList[key].dispatchEvent(event);
             }
-        });
+        }.bind(this));
       }
     }
   },
