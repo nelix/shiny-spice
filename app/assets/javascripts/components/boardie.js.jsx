@@ -39,12 +39,12 @@ function mouseOverRightHalf(e, rect) {
 var StackieRectKeeperMixin = {
   childRects: {},
   getInitialState: function() {
-    return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, dragging: false};
+    return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false};
   },
 
   handleTaskMove: function(columnId, taskKey, mouseEvent) {
     // Below is IE 10 only. Need to add pointer events detection (from modernizr, the false positives is crazy)
-    if (document.msElementsFromPoint) {
+    if (document.msElementsFromPoint && this.state.itemDragging) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
       
       // This needs to be fixed to be something more flexible, is pretty gross atm
@@ -57,15 +57,17 @@ var StackieRectKeeperMixin = {
   },
 
   handleTaskHover: function(columnKey, taskKey, position, mouseEvent) {
-    var targetBoundingRect = mouseEvent.target.getBoundingClientRect();
+    if (this.state.itemDragging) {
+      var targetBoundingRect = mouseEvent.target.getBoundingClientRect();
 
-    mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++
-    this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
+      mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++
+      this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
+    }
   },
 
   handleTaskGrab: function(columnKey, taskKey, position, width, height) {
     this.setState({dragItemKey: taskKey, overItemPosition: position, overColumnKey: columnKey, dragItemWidth: width, dragItemHeight: height});
-    this.setState({dragging: true});
+    this.setState({itemDragging: true});
   },
 
   handleTaskDrop: function(key) {
@@ -79,7 +81,7 @@ var StackieRectKeeperMixin = {
   },
 
   handleTaskRelease: function() {
-    this.setState({dragging: false});
+    this.setState({itemDragging: false});
   }
 
 };
@@ -87,7 +89,7 @@ var StackieRectKeeperMixin = {
 
 var Boardie = React.createClass({
 
-  mixins: [StackieRectKeeperMixin],
+  mixins: [StackieRectKeeperMixin, autoScrollMixin],
 
   getInitialState: function() {
     return {dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0}
@@ -131,42 +133,9 @@ var Boardie = React.createClass({
     }
   },
 
-  handleColumnHover: function(columnKey, columnId, mouseEvent) {
-    // Pop item into last position in column
-    if (this.state.overColumnKey !== columnKey) {
-      this.setState({overColumnKey: columnKey, overItemPosition: columns[columnId].items.length+1});
-    }
-
-    var position = columnId;
-
-    if (this.state.handleColumnHoverPosition === false || this.state.handleColumnHoverLeft === true) {
-      stateLeft = this.state.handleColumnHoverPosition;
-    } else {
-      stateLeft = mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect());
-    }
-
-    stateLeft && position++;
-    
-    this.setState({overColumnPosition: position});
-  },
-
-  handleColumnGrab: function(key, position, width, height) {
-    this.setState({dragColumnKey: key, overColumnPosition: position, dragColumnWidth: width, dragColumnHeight: height});
-  },
-
-  handleColumnRelease: function() {
-    this.setState({dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0});
-  },
-
-  columnRects: {},
-
-  handleColumnRect: function(component, rect) {
-    this.columnRects[component.props.key] = {component: component, rect: rect, columnKey: component.props.key};
-  },
-
   handleGrabieMove: function(mouseEvent) {
     // IE10 fix
-    if (document.msElementsFromPoint) {
+    if (document.msElementsFromPoint && this.state.columnDragging) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
       
       if (underlyingNodeList) {
@@ -181,6 +150,43 @@ var Boardie = React.createClass({
         }.bind(this));
       }
     }
+  },
+
+  handleColumnHover: function(columnKey, columnId, mouseEvent) {
+    if (this.state.columnDragging) {
+      // Pop item into last position in column
+      if (this.state.overColumnKey !== columnKey) {
+        this.setState({overColumnKey: columnKey, overItemPosition: columns[columnId].items.length+1});
+      }
+
+      var position = columnId;
+
+      if (this.state.handleColumnHoverPosition === false || this.state.handleColumnHoverLeft === true) {
+        stateLeft = this.state.handleColumnHoverPosition;
+      } else {
+        stateLeft = mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect());
+      }
+
+      stateLeft && position++;
+      
+      this.setState({overColumnPosition: position});
+
+      this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, this.getDOMNode().getBoundingClientRect())});
+    }
+  },
+
+  handleColumnGrab: function(key, position, width, height) {
+    this.setState({columnDragging: true, dragColumnKey: key, overColumnPosition: position, dragColumnWidth: width, dragColumnHeight: height});
+  },
+
+  handleColumnRelease: function() {
+    this.setState({columnDragging: false, dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0});
+  },
+
+  columnRects: {},
+
+  handleColumnRect: function(component, rect) {
+    this.columnRects[component.props.key] = {component: component, rect: rect, columnKey: component.props.key};
   },
 
   buildColumn: function(column, i) {
@@ -205,7 +211,8 @@ var Boardie = React.createClass({
             onGrabieLongGrab={this.handleTaskGrab.bind(null, column.id)}
             onGrabieMove={this.handleTaskMove.bind(null, column.id)}
             onGrabieHover={this.handleTaskHover.bind(null, column.id)}
-            dragging={this.state.dragging}
+            dragging={this.state.itemDragging}
+            autoScrollSpeed={this.state.autoScrollSpeed}
             onRect={this.handleRect}>
           {items}
         </Stackable>
@@ -223,6 +230,7 @@ var Boardie = React.createClass({
         <span style={{width: this.state.dragColumnWidth, height: this.state.dragColumnHeight}} className="grabbie-placeholder-sortie-column" key={'gap'}></span>
       );
     }
+
     return (
       <div className="boardie cf">
         {columns}

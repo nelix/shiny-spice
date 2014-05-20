@@ -34,9 +34,15 @@ var Stackable = React.createClass({
         <span style={{height: this.props.placeholderStyle.height}} className="grabie-grabbable grabbie-placeholder" key={'gap'}></span>
       );
     }
-    return this.attachScrollie(items, {
-      verticalOffset: 5,
-      persistant: false
-    });
+    
+    return this.attachScrollie(
+      items,
+      {
+        verticalOffset: 5,
+        persistant: false
+      },
+      this.props.dragging,
+      this.props.autoScrollSpeed
+    );
   }
 });

@@ -103,6 +103,25 @@ var Scrollie = React.createClass({
     }
   },
 
+  handleAutoScroll: function() {
+    var distanceForScrollStart = 100;
+    var mouseY = this.props.autoScroll.mouseY;
+    var elementTop = this.props.autoScroll.rect.top;
+    var elementBottom = this.props.autoScroll.rect.bottom;
+
+    var scrollieWrapperTop = this.refs.scrollieWrapper.getDOMNode().scrollTop;
+
+    console.log(scrollieWrapperTop)
+
+    if (mouseY < (elementTop + distanceForScrollStart)) {
+      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop - 1;
+    }
+
+    if (mouseY > (elementBottom - distanceForScrollStart)) {
+      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop + 1;
+    }
+  },
+
   // Mouse events
   handleGrabieGrab: function(mouse) {
     this.startScrollbarOffset = this.refs.scrollieWrapper.getDOMNode().scrollTop;
@@ -126,8 +145,13 @@ var Scrollie = React.createClass({
     var thumbStyle = this.props.style || {height: this.state.scrollbarHeight};
     var options = this.props.options;
 
-    if (this.state.scrollable) {
+    // There's probs a better way to do this?
+    if (this.props.autoScrollSpeed) {
+      //this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop + 1;
+      console.log(this.props.autoScrollSpeed)
+    }
 
+    if (this.state.scrollable) {
       if (transformProperty) {
         thumbStyle[transformProperty] = translate(0, this.state.scrollbarOffset);
       } else {
@@ -162,7 +186,7 @@ var Scrollie = React.createClass({
 });
 
 var ScrollieMixin = {
-  attachScrollie: function(component, parameters) {
+  attachScrollie: function(component, parameters, dragging, autoScrollSpeed) {
     var defaults = {
       maxHeight: null,
       minHeight: 100,
@@ -174,7 +198,7 @@ var ScrollieMixin = {
     var options = extend(defaults, parameters)
 
     return (
-      <Scrollie options={options}>{component}</Scrollie>
+      <Scrollie options={options} dragging={dragging} autoScrollSpeed={autoScrollSpeed}>{component}</Scrollie>
     );
   }
 }
