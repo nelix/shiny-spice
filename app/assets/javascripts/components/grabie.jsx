@@ -3,32 +3,12 @@
 
 var RectMixin = {
   // this is what checks is the mouse in position from boardie.js
-  isEventInRect: function(e, rect) {
-    return (e.pageX >= rect.left && e.pageX <= rect.right) && (e.pageY >= rect.top && e.pageY <= rect.bottom);
-  },
-
-  componentDidUpdate: function(prevProps, prevState) {
-    if (this.state.grabieMouse.mouseDown) return;
-    this.setRect() && this.props.onRect && this.props.onRect(this, this.rect);
-  },
-
-  componentDidMount: function() {
-    if (this.state.grabieMouse.mouseDown) return;
-    this.setRect() && this.props.onRect && this.props.onRect(this, this.rect);
-  },
-
-  rect: {},
-
-  setRect: function() {
+  getRect: function() {
     var el = this.getDOMNode();
     var rect = {};
 
-    rect = getBounds(el);
+    return getBounds(el);
 
-    if ((rect.top !== this.rect.top) || (rect.left !== this.rect.left) || (rect.width !== this.rect.width) || (rect.height !== this.rect.height)) {
-      this.rect = rect;
-      return true;
-    }
   }
 
 };
@@ -50,7 +30,8 @@ var Grabbable = React.createClass({
   },
 
   handleGrabieLongGrab: function (state) {
-    this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.rect.width, this.rect.height);
+    this.r = this.getRect();
+    this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.r.width, this.r.height);
     $(document).on("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
   },
 
@@ -60,19 +41,21 @@ var Grabbable = React.createClass({
   },
 
   render: function () {
+
     if (!this.state.grabieMouse.mouseLongDown) {
       return this.transferPropsTo(
         <div onMouseDown={this._handleGrabieMouseDown} className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
       );
     } else {
+      var r = this.getRect();
       return (
+
         <Overlay
-            style={{width: this.rect.width, height: this.rect.height, pointerEvents: 'none'}}
-            x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.rect.left)}
-            y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.rect.top)}
+            style={{width: this.r.width, height: this.r.height, pointerEvents: 'none'}}
+            x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.r.left)}
+            y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.r.top)}
             v={this.v}
             className={'grabie-grabbable grabie-grabbing'}
-            rects={this.rects}
             onMouseMove={this._handleGrabieMouseMove}
             onMouseUp={this._handleGrabieMouseUp}
             wrapperStyle={{pointerEvents: 'none'}}
