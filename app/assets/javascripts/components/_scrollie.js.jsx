@@ -110,6 +110,7 @@ var Scrollie = React.createClass({
   },
 
   handleGrabieMove: function(e, mouse) {
+    // can remove this if check
     if (this.state.grabieMouse.mouseDown) {
       var mouseDelta = mouse.grabStartY - mouse.grabY;
       var moveAmount = mouseDelta * this.scrollieTrackingRatio;

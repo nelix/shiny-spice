@@ -4,7 +4,7 @@ var Overlay = React.createClass({
   mixins: [LayeredComponentMixin],
 
   propTypes: {
-    children: React.PropTypes.component.isRequired
+    //children: React.PropTypes.component.isRequired
   },
 
   renderLayer: function() {
@@ -12,6 +12,7 @@ var Overlay = React.createClass({
     var sprite = null;
 
     if (this.props.children) {
+      var dragImageClass = this.props.className;
       sprite = <Sprite style={this.props.style} v={this.props.v} x={this.props.x} y={this.props.y} className={this.props.className}>{React.Children.only(this.props.children)}</Sprite>;
     }
 
@@ -20,6 +21,7 @@ var Overlay = React.createClass({
         style={{cursor: '-webkit-grabbing', zIndex:100000, left:0, top: 0, right:0, bottom:0, position: 'fixed'}}
         onMouseUp={this.props.onMouseUp}
         onMouseMove={this.props.onMouseMove}
+        className='overlay'
       >{sprite}</div>
     );
   },

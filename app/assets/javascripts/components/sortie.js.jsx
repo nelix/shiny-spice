@@ -18,16 +18,18 @@ var Stackable = React.createClass({
       var grabbableChild = <Grabbable
           position={i}
           key={child.props.key}
-          onGrabieGrab={this.props.onGrabieGrab.bind(null, child.props.key)}
-          onGrabieRelease={this.props.onGrabieRelease.bind(null, child.props.key)}
+          onGrabieLongGrab={this.props.onGrabieLongGrab.bind(null, child.props.key)}
+          onGrabieDragRelease={this.props.onGrabieDragRelease.bind(null, child.props.key)}
+          onGrabieRelease={this.props.onGrabieRelease}
           onGrabieMove={this.props.onGrabieMove.bind(null, child.props.key)}
+          onMouseMove={this.props.onGrabieHover.bind(null, child.props.key, i)}
           onRect={this.handleRect}>
         {child}
       </Grabbable>;
       return grabbableChild;
     },this);
 
-    if (this.props.overItemPosition !== false) {
+    if (this.props.overItemPosition !== false && this.props.dragging) {
       items.splice(this.props.overItemPosition, 0,
         <span style={{height: this.props.placeholderStyle.height}} className="grabie-grabbable grabbie-placeholder" key={'gap'}></span>
       );

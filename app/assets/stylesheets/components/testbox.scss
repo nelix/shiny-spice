@@ -5,6 +5,13 @@
     color: #FFF; padding: 1.5em;
     text-align: center;
     border-radius: 4px;
+
+    .overlay & {
+        pointer-events: none;
+        * {
+           pointer-events: none; 
+        }
+    }
 }
 
 .grabie-grabbing > .testbox {
@@ -19,5 +26,5 @@
 }
 
 .testbox:hover {
-  background: #0AF;
+  opacity: 0.7 !important;
 }
