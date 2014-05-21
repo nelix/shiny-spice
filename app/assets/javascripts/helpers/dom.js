@@ -35,9 +35,9 @@
       return el.getBoundingClientRect();
   };
 
-  var dispatchPointerEventsFallback = function(mouseEvent, eventName) {
+  var dispatchPointerEventsFallback = pointerEventsAvailable ? function() {} :  function(mouseEvent, eventName) {
     // IE10
-    if (!pointerEvents && msPointerEventsMethod) {
+    if (msPointerEventsMethod) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
 
       if (underlyingNodeList) {
@@ -64,11 +64,12 @@
       return 'translate( ' + x + 'px, ' + y + 'px)';
     };
 
-  var pointerEventsCheck = function() {
+  var pointerEventsAvailable = (function() {
+    //https://github.com/ausi/Feature-detection-technique-for-pointer-events/blob/master/modernizr-pointerevents.js
     var element = document.createElement('x');
     element.style.cssText = 'pointer-events:auto';
     return element.style.pointerEvents === 'auto';
-  }
+  })();
 
   // publicize
   // TODO: namespace
@@ -80,6 +81,5 @@
   window.dispatchPointerEventsFallback = dispatchPointerEventsFallback;
   // Support
   window.msPointerEventsMethod = document.msElementsFromPoint;
-  window.pointerEvents = pointerEventsCheck();
   window.isTouch = !!('ontouchstart' in document.documentElement);
 })(window);

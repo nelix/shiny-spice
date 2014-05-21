@@ -41,8 +41,8 @@ var StackieRectKeeperMixin = {
     return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false};
   },
 
-  handleTaskIeHover: function(columnId, taskKey, mouseEvent) {
-    this.state.itemDragging && dispatchPointerEventsFallback(mouseEvent, 'mousemove');
+  handleTaskIeHover: function(mouseEvent) {
+    dispatchPointerEventsFallback(mouseEvent, 'mousemove');
   },
 
   handleTaskHover: function(columnKey, taskKey, position, mouseEvent) {
@@ -176,7 +176,7 @@ var Boardie = React.createClass({
             onGrabieDragRelease={this.handleTaskDrop}
             onGrabieRelease={this.handleTaskRelease}
             onGrabieLongGrab={this.handleTaskGrab.bind(null, column.id)}
-            onGrabieMove={this.handleTaskIeHover.bind(null, column.id)}
+            onGrabieMove={this.state.itemDragging && this.handleTaskIeHover}
             onGrabieHover={this.handleTaskHover.bind(null, column.id)}
             dragging={this.state.itemDragging}
             autoScrollSpeed={this.state.autoScrollSpeed}>

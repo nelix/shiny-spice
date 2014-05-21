@@ -17,7 +17,7 @@ var Stackable = React.createClass({
           onGrabieLongGrab={this.props.onGrabieLongGrab.bind(null, child.props.key)}
           onGrabieDragRelease={this.props.onGrabieDragRelease.bind(null, child.props.key)}
           onGrabieRelease={this.props.onGrabieRelease}
-          onGrabieMove={this.props.onGrabieMove.bind(null, child.props.key)}
+          onGrabieMove={this.props.onGrabieMove}
           onMouseMove={this.props.onGrabieHover.bind(null, child.props.key, i)}>
         {child}
       </Grabbable>;
