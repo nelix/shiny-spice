@@ -47,7 +47,7 @@ var StackieRectKeeperMixin = {
 
   handleTaskHover: function(columnKey, taskKey, position, mouseEvent) {
     if (this.state.itemDragging) {
-      var targetBoundingRect = mouseEvent.target.getBoundingClientRect();
+      var targetBoundingRect = getBounds(mouseEvent.target);
 
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++
       this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
@@ -125,7 +125,7 @@ var Boardie = React.createClass({
   handleIeHover: function(mouseEvent) {
     // IE10 fix
     var hoveredColumn = dispatchPointerEventsFallback(mouseEvent, 'data-grabie', 'mousemove');
-    hoveredColumn && this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, hoveredColumn.getBoundingClientRect())});
+    hoveredColumn && this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, getBounds(hoveredColumn))});
   },
 
   handleColumnHover: function(columnKey, columnId, mouseEvent) {
@@ -139,14 +139,14 @@ var Boardie = React.createClass({
     if (this.state.handleColumnHoverPosition === false || this.state.handleColumnHoverLeft === true) {
       stateLeft = this.state.handleColumnHoverPosition;
     } else {
-      stateLeft = mouseOverRightHalf(mouseEvent, mouseEvent.target.getBoundingClientRect());
+      stateLeft = mouseOverRightHalf(mouseEvent, getBounds(mouseEvent.target));
     }
 
     stateLeft && position++;
     
     this.setState({overColumnPosition: position});
 
-    this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, this.getDOMNode().getBoundingClientRect())});
+    this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
   },
 
   handleColumnGrab: function(key, position, width, height) {
