@@ -37,27 +37,12 @@ function mouseOverRightHalf(e, rect) {
 }
 
 var StackieRectKeeperMixin = {
-  childRects: {},
   getInitialState: function() {
     return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false};
   },
 
-  componentWillMount: function() {
-    this.pointerEventsFallback = document.msElementsFromPoint;
-  },
-
   handleTaskIeHover: function(columnId, taskKey, mouseEvent) {
-    // Below is IE 10 only. Need to add pointer events detection (from modernizr, the false positives is crazy)
-    if (this.pointerEventsFallback && this.state.itemDragging) {
-      var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
-      
-      // This needs to be fixed to be something more flexible, is pretty gross atm
-      if (underlyingNodeList && underlyingNodeList[3].className == 'testbox') {
-        var event = document.createEvent("HTMLEvents");
-        event.initEvent("mousemove",true,true);
-        underlyingNodeList[4].dispatchEvent(event);
-      }
-    }
+    this.state.itemDragging && dispatchPointerEventsFallback(mouseEvent, 'data-grabie', 'mousemove');
   },
 
   handleTaskHover: function(columnKey, taskKey, position, mouseEvent) {
@@ -97,10 +82,6 @@ var Boardie = React.createClass({
 
   getInitialState: function() {
     return {dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0}
-  },
-
-  componentWillMount: function() {
-    this.pointerEventsFallback = document.msElementsFromPoint;
   },
 
   getItems: function(ids) {
@@ -143,21 +124,8 @@ var Boardie = React.createClass({
 
   handleIeHover: function(mouseEvent) {
     // IE10 fix
-    if (this.pointerEventsFallback) {
-      var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
-      
-      if (underlyingNodeList) {
-        Object.keys(underlyingNodeList).forEach(function(key) {
-            if (underlyingNodeList[key].className.indexOf('grabie-grabbable sortie-column') > -1) {
-              this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, underlyingNodeList[key].getBoundingClientRect())});
-              
-              var event = document.createEvent("HTMLEvents");
-              event.initEvent("mousemove",true,true);
-              underlyingNodeList[key].dispatchEvent(event);
-            }
-        }.bind(this));
-      }
-    }
+    var hoveredColumn = dispatchPointerEventsFallback(mouseEvent, 'data-grabie', 'mousemove');
+    hoveredColumn && this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, hoveredColumn.getBoundingClientRect())});
   },
 
   handleColumnHover: function(columnKey, columnId, mouseEvent) {
@@ -188,12 +156,13 @@ var Boardie = React.createClass({
   handleColumnRelease: function() {
     this.setState({columnDragging: false, dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0});
   },
-  
+
   buildColumn: function(column, i) {
     var items = this.getItems(column.items);
     var column =
       <Grabbable
           className="sortie-column"
+          data-grabie="hover"
           position={i}
           key={column.id}
           onGrabieLongGrab={this.handleColumnGrab.bind(null, column.id)}

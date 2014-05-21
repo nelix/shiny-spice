@@ -35,6 +35,24 @@
       return el.getBoundingClientRect();
   };
 
+  var dispatchPointerEventsFallback = function(mouseEvent, targetHook, eventName) {
+    // IE10
+    if (msPointerEventsMethod) {
+      var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
+
+      if (underlyingNodeList) {
+        for (var i = 0; i < underlyingNodeList.length; i++) {
+          if (underlyingNodeList[i].getAttribute(targetHook)) {
+            var event = document.createEvent('HTMLEvents');
+            event.initEvent(eventName, true, true);
+            underlyingNodeList[i].dispatchEvent(event);            
+            return underlyingNodeList[i];
+          }
+        }
+      }
+    }
+  };
+
   var transformProperty = getStyleProperty('transform');
 
   var is3d = !!getStyleProperty('perspective');
@@ -45,6 +63,7 @@
     function( x, y ) {
       return 'translate( ' + x + 'px, ' + y + 'px)';
     };
+
     // publicize
     // TODO: namespace
     window.getStyleProperty = getStyleProperty;
@@ -52,5 +71,8 @@
     window.getBounds = getBounds;
     window.transformProperty = transformProperty;
     window.translate = translate;
+    window.dispatchPointerEventsFallback = dispatchPointerEventsFallback;
+    // Support
+    window.msPointerEventsMethod = document.msElementsFromPoint;
     window.isTouch = !!('ontouchstart' in document.documentElement);
 })(window);
