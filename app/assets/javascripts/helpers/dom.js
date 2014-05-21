@@ -37,7 +37,7 @@
 
   var dispatchPointerEventsFallback = function(mouseEvent, eventName) {
     // IE10
-    if (msPointerEventsMethod) {
+    if (!pointerEvents && msPointerEventsMethod) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
 
       if (underlyingNodeList) {
@@ -64,15 +64,22 @@
       return 'translate( ' + x + 'px, ' + y + 'px)';
     };
 
-    // publicize
-    // TODO: namespace
-    window.getStyleProperty = getStyleProperty;
-    window.getStyle = getStyle;
-    window.getBounds = getBounds;
-    window.transformProperty = transformProperty;
-    window.translate = translate;
-    window.dispatchPointerEventsFallback = dispatchPointerEventsFallback;
-    // Support
-    window.msPointerEventsMethod = document.msElementsFromPoint;
-    window.isTouch = !!('ontouchstart' in document.documentElement);
+  var pointerEventsCheck = function() {
+    var element = document.createElement('x');
+    element.style.cssText = 'pointer-events:auto';
+    return element.style.pointerEvents === 'auto';
+  }
+
+  // publicize
+  // TODO: namespace
+  window.getStyleProperty = getStyleProperty;
+  window.getStyle = getStyle;
+  window.getBounds = getBounds;
+  window.transformProperty = transformProperty;
+  window.translate = translate;
+  window.dispatchPointerEventsFallback = dispatchPointerEventsFallback;
+  // Support
+  window.msPointerEventsMethod = document.msElementsFromPoint;
+  window.pointerEvents = pointerEventsCheck();
+  window.isTouch = !!('ontouchstart' in document.documentElement);
 })(window);
