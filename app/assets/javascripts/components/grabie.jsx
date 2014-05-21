@@ -21,7 +21,7 @@ var Grabbable = React.createClass({
   },
 
   handleGrabieRelease: function(state) {
-    $(document).unbind("mousemove", this._handleGrabieMouseMove);
+    $(document).off("mousemove", this._handleGrabieMouseMove);
     this.props.onGrabieRelease && this.props.onGrabieRelease(state);
   },
 
