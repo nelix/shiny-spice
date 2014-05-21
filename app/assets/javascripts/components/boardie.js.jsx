@@ -42,7 +42,7 @@ var StackieRectKeeperMixin = {
   },
 
   handleTaskIeHover: function(columnId, taskKey, mouseEvent) {
-    this.state.itemDragging && dispatchPointerEventsFallback(mouseEvent, 'data-grabie', 'mousemove');
+    this.state.itemDragging && dispatchPointerEventsFallback(mouseEvent, 'mousemove');
   },
 
   handleTaskHover: function(columnKey, taskKey, position, mouseEvent) {
@@ -124,7 +124,7 @@ var Boardie = React.createClass({
 
   handleIeHover: function(mouseEvent) {
     // IE10 fix
-    var hoveredColumn = dispatchPointerEventsFallback(mouseEvent, 'data-grabie', 'mousemove');
+    var hoveredColumn = dispatchPointerEventsFallback(mouseEvent, 'mousemove');
     hoveredColumn && this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, getBounds(hoveredColumn))});
   },
 
@@ -162,7 +162,6 @@ var Boardie = React.createClass({
     var column =
       <Grabbable
           className="sortie-column"
-          data-grabie="hover"
           position={i}
           key={column.id}
           onGrabieLongGrab={this.handleColumnGrab.bind(null, column.id)}

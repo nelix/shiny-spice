@@ -44,7 +44,7 @@ var Grabbable = React.createClass({
 
     if (!this.state.grabieMouse.mouseLongDown) {
       return this.transferPropsTo(
-        <div onMouseDown={this._handleGrabieMouseDown} data-grabie="hover" className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
+        <div onMouseDown={this._handleGrabieMouseDown} className="grabie-grabbable">{React.Children.only(this.props.children)}</div>
       );
     } else {
       return (

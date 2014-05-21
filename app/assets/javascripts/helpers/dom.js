@@ -35,14 +35,14 @@
       return el.getBoundingClientRect();
   };
 
-  var dispatchPointerEventsFallback = function(mouseEvent, targetHook, eventName) {
+  var dispatchPointerEventsFallback = function(mouseEvent, eventName) {
     // IE10
     if (msPointerEventsMethod) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
 
       if (underlyingNodeList) {
         for (var i = 0; i < underlyingNodeList.length; i++) {
-          if (underlyingNodeList[i].getAttribute(targetHook)) {
+          if (window.getComputedStyle(underlyingNodeList[i]).getPropertyValue('pointer-events') !== 'none') {
             var event = document.createEvent('HTMLEvents');
             event.initEvent(eventName, true, true);
             underlyingNodeList[i].dispatchEvent(event);            
