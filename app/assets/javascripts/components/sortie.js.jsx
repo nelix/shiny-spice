@@ -9,10 +9,6 @@ var Stackable = React.createClass({
     children: React.PropTypes.arrayOf(React.PropTypes.component).isRequired
   },
 
-  handleRect: function(a,b) {
-    this.props.onRect && this.props.onRect(a,b, this.props.key);
-  },
-
   render: function() {
     var items = this.props.children.map(function joinChildWithGrabbable(child, i) {
       var grabbableChild = <Grabbable
@@ -22,8 +18,7 @@ var Stackable = React.createClass({
           onGrabieDragRelease={this.props.onGrabieDragRelease.bind(null, child.props.key)}
           onGrabieRelease={this.props.onGrabieRelease}
           onGrabieMove={this.props.onGrabieMove.bind(null, child.props.key)}
-          onMouseMove={this.props.onGrabieHover.bind(null, child.props.key, i)}
-          onRect={this.handleRect}>
+          onMouseMove={this.props.onGrabieHover.bind(null, child.props.key, i)}>
         {child}
       </Grabbable>;
       return grabbableChild;
@@ -34,7 +29,7 @@ var Stackable = React.createClass({
         <span style={{height: this.props.placeholderStyle.height}} className="grabie-grabbable grabbie-placeholder" key={'gap'}></span>
       );
     }
-    
+
     return this.attachScrollie(
       items,
       {

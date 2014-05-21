@@ -188,13 +188,7 @@ var Boardie = React.createClass({
   handleColumnRelease: function() {
     this.setState({columnDragging: false, dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0});
   },
-
-  columnRects: {},
-
-  handleColumnRect: function(component, rect) {
-    this.columnRects[component.props.key] = {component: component, rect: rect, columnKey: component.props.key};
-  },
-
+  
   buildColumn: function(column, i) {
     var items = this.getItems(column.items);
     var column =
@@ -206,8 +200,7 @@ var Boardie = React.createClass({
           onGrabieDragRelease={this.handleColumnRelease.bind(null, column.id)}
           onMouseMove={this.state.columnDragging && this.handleColumnHover.bind(null, column.id, i)}
           onGrabieMove={this.state.columnDragging && this.handleIeHover}
-          onMouseOut={this.handleColumnLeave}
-          onRect={this.handleColumnRect}>
+          onMouseOut={this.handleColumnLeave}>
         <Stackable
             overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition}
             placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}}
@@ -218,8 +211,7 @@ var Boardie = React.createClass({
             onGrabieMove={this.handleTaskIeHover.bind(null, column.id)}
             onGrabieHover={this.handleTaskHover.bind(null, column.id)}
             dragging={this.state.itemDragging}
-            autoScrollSpeed={this.state.autoScrollSpeed}
-            onRect={this.handleRect}>
+            autoScrollSpeed={this.state.autoScrollSpeed}>
           {items}
         </Stackable>
       </Grabbable>
