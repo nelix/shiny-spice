@@ -121,9 +121,9 @@ var Scrollie = React.createClass({
     }
   },
 
-  scroll: function(distance) {
-    var speed = 20;
-    var scrollAmount = this.refs.scrollieWrapper.getDOMNode().scrollTop + (distance * speed);
+  scroll: function(speed) {
+    var speedMultiplier = 20;
+    var scrollAmount = this.refs.scrollieWrapper.getDOMNode().scrollTop + (speed * speedMultiplier);
     this.refs.scrollieWrapper.getDOMNode().scrollTop = scrollAmount;
   },
 
