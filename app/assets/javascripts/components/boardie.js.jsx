@@ -48,10 +48,8 @@ var StackieRectKeeperMixin = {
   handleItemHover: function(columnKey, itemKey, position, mouseEvent) {
     if (this.state.itemDragging) {
       var targetBoundingRect = getBounds(mouseEvent.target);
-
-      mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++
-      this.setState({overItemKey: itemKey, overColumnKey: columnKey, overItemPosition: position});
-      this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
+      mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++;
+      this.setState({overItemKey: itemKey, overColumnKey: columnKey, overItemPosition: position, autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
     }
   },
 
@@ -73,7 +71,6 @@ var StackieRectKeeperMixin = {
   handleItemRelease: function() {
     this.setState({itemDragging: false});
   }
-
 };
 
 
@@ -146,8 +143,6 @@ var Boardie = React.createClass({
     stateLeft && position++;
 
     this.setState({overColumnPosition: position});
-
-    this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
   },
 
   handleColumnGrab: function(key, position, width, height) {
@@ -191,7 +186,7 @@ var Boardie = React.createClass({
   render: function() {
     var columns = this.props.columns.map(this.buildColumn, this);
 
-  // this is an issue, as it's always moving with the mouse :/
+    // this is an issue, as it's always moving with the mouse :/
     if (this.state.overColumnPosition !== null) {
       columns.splice(this.state.overColumnPosition, 0,
         <span style={{width: this.state.dragColumnWidth, height: this.state.dragColumnHeight}} className="grabbie-placeholder-sortie-column" key={'gap'}></span>
