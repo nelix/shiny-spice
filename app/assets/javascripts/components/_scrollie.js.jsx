@@ -25,7 +25,6 @@ var Scrollie = React.createClass({
     window.addEventListener('resize', this.createScrollbar);
 
     document.addEventListener('mousedown', function() {
-      console.log(this)
       this.interval = setInterval(this.tick, 5);
     }.bind(this));
 

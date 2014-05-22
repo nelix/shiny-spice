@@ -1,20 +1,8 @@
 /** @jsx React.DOM */
 // https://twitter.com/mollyclare/status/462831500497391616
 
-var RectMixin = {
-  // this is what checks is the mouse in position from boardie.js
-  getRect: function() {
-    var el = this.getDOMNode();
-    var rect = {};
-
-    return getBounds(el);
-
-  }
-
-};
-
 var Grabbable = React.createClass({
-  mixins: [GrabieMouseMixin, RectMixin],
+  mixins: [GrabieMouseMixin],
 
   propTypes: {
     children: React.PropTypes.component.isRequired
@@ -30,8 +18,8 @@ var Grabbable = React.createClass({
   },
 
   handleGrabieLongGrab: function (state) {
-    this.r = this.getRect();
-    this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.r.width, this.r.height);
+    this.boundingRect = getBounds(this.getDOMNode());
+    this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.boundingRect.width, this.boundingRect.height);
     document.addEventListener("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
   },
 
@@ -49,9 +37,9 @@ var Grabbable = React.createClass({
     } else {
       return (
         <Overlay
-            style={{width: this.r.width, height: this.r.height, pointerEvents: 'none'}}
-            x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.r.left)}
-            y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.r.top)}
+            style={{width: this.boundingRect.width, height: this.boundingRect.height, pointerEvents: 'none'}}
+            x={this.state.grabieMouse.grabX - (this.state.grabieMouse.grabStartX - this.boundingRect.left)}
+            y={this.state.grabieMouse.grabY - (this.state.grabieMouse.grabStartY - this.boundingRect.top)}
             v={this.v}
             className={'grabie-grabbable grabie-grabbing'}
             onMouseMove={this._handleGrabieMouseMove}
