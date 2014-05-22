@@ -24,9 +24,8 @@ var Stackable = React.createClass({
       return grabbableChild;
     },this);
 
-    var hidePlaceholders = !!(this.props.autoScrollSpeed && this.props.autoScrollSpeed > 0.5);
-
-    if (this.props.overItemPosition !== false && this.props.dragging && !hidePlaceholders) {
+    var hidePlaceholders = !(this.props.autoScrollSpeed && (this.props.autoScrollSpeed > 0.15 && this.props.autoScrollSpeed < -0.15 ));
+    if (this.props.overItemPosition !== false && this.props.dragging && hidePlaceholders) {
       items.splice(this.props.overItemPosition, 0,
         <span style={{height: this.props.placeholderStyle.height}} className="grabie-grabbable grabbie-placeholder" key={'gap'}></span>
       );
