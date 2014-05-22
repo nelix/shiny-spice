@@ -23,14 +23,7 @@ var Scrollie = React.createClass({
   componentDidMount: function() {
     this.createScrollbar();
     window.addEventListener('resize', this.createScrollbar);
-
-    document.addEventListener('mousedown', function() {
-      this.interval = setInterval(this.tick, 5);
-    }.bind(this));
-
-    document.addEventListener('mouseup', function() {
-      clearInterval(this.interval);
-    }.bind(this));
+    requestAnimationFrame(this.tick);
   },
 
   componentDidUpdate: function () {
@@ -39,8 +32,9 @@ var Scrollie = React.createClass({
 
   tick: function() {
     if (this.props.autoScrollSpeed) {
-      this.scroll(this.props.autoScrollSpeed);
+      this.scroll(this.props.autoScrollSpeed*2.5);
     }
+    requestAnimationFrame(this.tick);
   },
 
   componentWillUnmount: function() {
