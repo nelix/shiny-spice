@@ -23,7 +23,7 @@ var Scrollie = React.createClass({
   componentDidMount: function() {
     this.createScrollbar();
     window.addEventListener('resize', this.createScrollbar);
-    this.interval = setInterval(this.tick, 100);
+    this.interval = setInterval(this.tick, 5);
   },
 
   componentDidUpdate: function () {
@@ -33,8 +33,6 @@ var Scrollie = React.createClass({
   tick: function() {
     if (this.props.autoScrollSpeed) {
       this.scroll(this.props.autoScrollSpeed);
-    } else {
-      this.stopScroll();
     }
   },
 
@@ -120,23 +118,7 @@ var Scrollie = React.createClass({
   scroll: function(distance) {
     var speed = 20;
     var scrollAmount = this.refs.scrollieWrapper.getDOMNode().scrollTop + (distance * speed);
-
-    if (jQuery) {
-      var scrollAmount = distance > 0 ? this.refs.scrollieItems.getDOMNode().clientHeight : 0;
-
-      if (this.previousDistance !== distance) {
-        $(this.refs.scrollieWrapper.getDOMNode()).stop().animate({ scrollTop:  scrollAmount}, 5000)
-      }
-    } else {
-      var scrollAmount = this.refs.scrollieWrapper.getDOMNode().scrollTop + (distance * speed);
-      this.refs.scrollieWrapper.getDOMNode().scrollTop = scrollAmount;  
-    }
-
-    this.previousDistance = distance;
-  },
-
-  stopScroll: function() {
-    $(this.refs.scrollieWrapper.getDOMNode()).stop()
+    this.refs.scrollieWrapper.getDOMNode().scrollTop = scrollAmount;
   },
 
   // Mouse events
