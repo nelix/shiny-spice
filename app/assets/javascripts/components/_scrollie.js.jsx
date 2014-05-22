@@ -23,10 +23,22 @@ var Scrollie = React.createClass({
   componentDidMount: function() {
     this.createScrollbar();
     window.addEventListener('resize', this.createScrollbar);
+    this.interval = setInterval(this.tick, 100);
   },
 
   componentDidUpdate: function () {
     this.createScrollbar();
+  },
+
+  tick: function() {
+    if (this.props.autoScrollSpeed > 0) {
+      this.scroll(this.props.autoScrollSpeed);
+    }
+  },
+
+  componentWillUnmount: function() {
+    clearInterval(this.interval);
+    window.removeEventListener('resize', this.createScrollbar);
   },
 
   getNativeScrollbarWidth: function(scrollableElement) {
@@ -103,6 +115,19 @@ var Scrollie = React.createClass({
     }
   },
 
+  scroll: function(distance) {
+    var scrollAmount = this.state.nativeScrollbarOffset + distance;
+
+    // Set the offset
+    var scrollbarOffset = scrollAmount / this.scrollieTrackingRatio;
+
+    this.setState({
+      scrollbarOffset: scrollbarOffset + this.props.options.verticalOffset,
+      nativeScrollbarOffset: scrollAmount
+    });
+  },
+
+/*
   handleAutoScroll: function() {
     var distanceForScrollStart = 100;
     var mouseY = this.props.autoScroll.mouseY;
@@ -121,6 +146,7 @@ var Scrollie = React.createClass({
       this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop + 1;
     }
   },
+*/
 
   // Mouse events
   handleGrabieGrab: function(mouse) {
@@ -144,12 +170,6 @@ var Scrollie = React.createClass({
   render: function() {
     var thumbStyle = this.props.style || {height: this.state.scrollbarHeight};
     var options = this.props.options;
-
-    // There's probs a better way to do this?
-    if (this.props.autoScrollSpeed) {
-      //this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop + 1;
-      console.log(this.props.autoScrollSpeed)
-    }
 
     if (this.state.scrollable) {
       if (transformProperty) {

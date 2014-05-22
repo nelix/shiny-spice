@@ -3,7 +3,7 @@ var autoScrollMixin = {
   /*
   getInitialState: function () {
     return {
-      
+
     };
   }, */
 
@@ -25,8 +25,7 @@ var autoScrollMixin = {
       var speed = 1 - (mouseFromElementBottom / distanceForScrollStart);
     }
 
-    speed = !dragging ? null : speed;
-
+    speed = dragging ? speed : 0;
     return speed || null;
   }
 }

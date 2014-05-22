@@ -51,6 +51,7 @@ var StackieRectKeeperMixin = {
 
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++
       this.setState({overItemKey: taskKey, overColumnKey: columnKey, overItemPosition: position});
+      this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
     }
   },
 
@@ -143,7 +144,7 @@ var Boardie = React.createClass({
     }
 
     stateLeft && position++;
-    
+
     this.setState({overColumnPosition: position});
 
     this.setState({autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
