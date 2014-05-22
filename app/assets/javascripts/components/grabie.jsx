@@ -21,7 +21,7 @@ var Grabbable = React.createClass({
   },
 
   handleGrabieRelease: function(state) {
-    $(document).off("mousemove", this._handleGrabieMouseMove);
+    document.removeEventListener("mousemove", this._handleGrabieMouseMove);
     this.props.onGrabieRelease && this.props.onGrabieRelease(state);
   },
 
@@ -32,7 +32,7 @@ var Grabbable = React.createClass({
   handleGrabieLongGrab: function (state) {
     this.r = this.getRect();
     this.props.onGrabieLongGrab && this.props.onGrabieLongGrab(this.props.position, this.r.width, this.r.height);
-    $(document).on("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
+    document.addEventListener("mousemove", this._handleGrabieMouseMove); // Because we removed it from the overlay...
   },
 
   handleGrabieMove: function (e, state, v) {
