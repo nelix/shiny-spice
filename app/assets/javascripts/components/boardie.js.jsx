@@ -49,13 +49,24 @@ var StackieRectKeeperMixin = {
     if (this.state.itemDragging) {
       var targetBoundingRect = getBounds(mouseEvent.target);
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++;
-      this.setState({overItemKey: itemKey, overColumnKey: columnKey, overItemPosition: position, autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))});
+      this.setState({
+        overItemKey: itemKey, 
+        overColumnKey: columnKey, 
+        overItemPosition: position, 
+        autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))
+      });
     }
   },
 
   handleItemGrab: function(columnKey, itemKey, position, width, height) {
-    this.setState({dragItemKey: itemKey, overItemPosition: position, overColumnKey: columnKey, dragItemWidth: width, dragItemHeight: height});
-    this.setState({itemDragging: true});
+    this.setState({
+      itemDragging: true, 
+      dragItemKey: itemKey, 
+      overItemPosition: position, 
+      overColumnKey: columnKey, 
+      dragItemWidth: width, 
+      dragItemHeight: height
+    });
   },
 
   handleItemDrop: function(key) {
@@ -146,7 +157,13 @@ var Boardie = React.createClass({
   },
 
   handleColumnGrab: function(key, position, width, height) {
-    this.setState({columnDragging: true, dragColumnKey: key, overColumnPosition: position, dragColumnWidth: width, dragColumnHeight: height});
+    this.setState({
+      columnDragging: true, 
+      dragColumnKey: key, 
+      overColumnPosition: position, 
+      dragColumnWidth: width, 
+      dragColumnHeight: height
+    });
   },
 
   handleColumnRelease: function() {
