@@ -31,8 +31,10 @@ var Scrollie = React.createClass({
   },
 
   tick: function() {
-    if (this.props.autoScrollSpeed > 0) {
+    if (this.props.autoScrollSpeed) {
       this.scroll(this.props.autoScrollSpeed);
+    } else {
+      this.stopScroll();
     }
   },
 
@@ -116,37 +118,26 @@ var Scrollie = React.createClass({
   },
 
   scroll: function(distance) {
-    var scrollAmount = this.state.nativeScrollbarOffset + distance;
+    var speed = 20;
+    var scrollAmount = this.refs.scrollieWrapper.getDOMNode().scrollTop + (distance * speed);
 
-    // Set the offset
-    var scrollbarOffset = scrollAmount / this.scrollieTrackingRatio;
+    if (jQuery) {
+      var scrollAmount = distance > 0 ? this.refs.scrollieItems.getDOMNode().clientHeight : 0;
 
-    this.setState({
-      scrollbarOffset: scrollbarOffset + this.props.options.verticalOffset,
-      nativeScrollbarOffset: scrollAmount
-    });
-  },
-
-/*
-  handleAutoScroll: function() {
-    var distanceForScrollStart = 100;
-    var mouseY = this.props.autoScroll.mouseY;
-    var elementTop = this.props.autoScroll.rect.top;
-    var elementBottom = this.props.autoScroll.rect.bottom;
-
-    var scrollieWrapperTop = this.refs.scrollieWrapper.getDOMNode().scrollTop;
-
-    console.log(scrollieWrapperTop)
-
-    if (mouseY < (elementTop + distanceForScrollStart)) {
-      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop - 1;
+      if (this.previousDistance !== distance) {
+        $(this.refs.scrollieWrapper.getDOMNode()).stop().animate({ scrollTop:  scrollAmount}, 5000)
+      }
+    } else {
+      var scrollAmount = this.refs.scrollieWrapper.getDOMNode().scrollTop + (distance * speed);
+      this.refs.scrollieWrapper.getDOMNode().scrollTop = scrollAmount;  
     }
 
-    if (mouseY > (elementBottom - distanceForScrollStart)) {
-      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop + 1;
-    }
+    this.previousDistance = distance;
   },
-*/
+
+  stopScroll: function() {
+    $(this.refs.scrollieWrapper.getDOMNode()).stop()
+  },
 
   // Mouse events
   handleGrabieGrab: function(mouse) {

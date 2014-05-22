@@ -180,7 +180,7 @@ var Boardie = React.createClass({
             onGrabieMove={this.state.itemDragging && this.handleTaskIeHover}
             onGrabieHover={this.handleTaskHover.bind(null, column.id)}
             dragging={this.state.itemDragging}
-            autoScrollSpeed={this.state.autoScrollSpeed}>
+            autoScrollSpeed={this.state.overColumnKey === column.id ? this.state.autoScrollSpeed : null}>
           {items}
         </Stackable>
       </Grabbable>
