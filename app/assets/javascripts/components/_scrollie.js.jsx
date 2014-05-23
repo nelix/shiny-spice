@@ -65,6 +65,8 @@ var Scrollie = React.createClass({
     var scrollbarOffset = scrollieWrapper.scrollTop;
     var pendingState = {};
 
+    this.prevCHeight = scrollieItems.clientHeight;
+
     this.originalScrollbarHeight = scrollbarHeight;
 
     if (scrollbarHeight < this.props.options.minHeight) {
@@ -73,9 +75,22 @@ var Scrollie = React.createClass({
       scrollbarHeight = this.props.options.maxHeight;
     }
 
+    if (this.state.scrollbarHeight !== scrollbarHeight) {
+      pendingState.scrollbarHeight = scrollbarHeight;
+    }
+
+    // Set the standard tracking ratio
+    this.scrollieTrackingRatio = this.scrollieItemsHeight / this.scrollieWrapperHeight;
+
+    // If the user has a min OR max scrollbar height set, we need to adjust tracking ratio
+    if (this.originalScrollbarHeight < this.state.scrollbarHeight || this.originalScrollbarHeight > this.state.scrollbarHeight) {
+      this.scrollieTrackingRatio = ((this.scrollieItemsHeight - this.scrollieWrapperHeight) / ((this.scrollieWrapperHeight - (this.props.options.verticalOffset * 2)) - this.state.scrollbarHeight));
+    }
+
     // Check the top offset, largly used for updating component
     if (this.scrollieItemsHeight && (this.scrollieItemsHeight !== scrollieItems.clientHeight)) {
-        pendingState.scrollbarOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
+      // To kick scrollie into gear
+      this.refs.scrollieWrapper.getDOMNode().scrollTop = this.refs.scrollieWrapper.getDOMNode().scrollTop;  
     }
 
     this.scrollieItemsHeight = scrollieItems.clientHeight;
@@ -83,9 +98,6 @@ var Scrollie = React.createClass({
 
     // Check if we should add some scrolls
     if (scrollieItems.clientHeight > scrollieWrapper.clientHeight) {
-      if (this.state.scrollbarHeight !== scrollbarHeight) {
-        pendingState.scrollbarHeight = scrollbarHeight;
-      }
 
       // Scrolls are required, check if they dont exist
       if (!this.state.scrollable) {
@@ -93,26 +105,11 @@ var Scrollie = React.createClass({
         pendingState.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
       }
 
-      if (this.state.nativeScrollbarOffset !== scrollbarOffset) {
-        newScrollOffset = (scrollbarOffset / scrollieItems.clientHeight) * (scrollieWrapper.clientHeight);
-        pendingScrollbarOffset = newScrollOffset;
-        pendingState.nativeScrollbarOffset = scrollbarOffset;
-      }
-
-      // Set the standard tracking ratio
-      this.scrollieTrackingRatio = this.scrollieItemsHeight / this.scrollieWrapperHeight;
-
-      // If the user has a min OR max scrollbar height set, we need to adjust tracking ratio
-      if (this.originalScrollbarHeight < this.state.scrollbarHeight || this.originalScrollbarHeight > this.state.scrollbarHeight) {
-        this.scrollieTrackingRatio = ((this.scrollieItemsHeight - this.scrollieWrapperHeight) / ((this.scrollieWrapperHeight - (this.props.options.verticalOffset * 2)) - this.state.scrollbarHeight));
-      }
-
     } else if (this.state.scrollable) {
       pendingState.scrollable = false;
     }
-    if (Object.keys(pendingState).length > 0) {
-      this.setState(pendingState);
-    }
+
+    Object.keys(pendingState).length && this.setState(pendingState);
   },
 
   scroll: function(speed) {
@@ -188,7 +185,7 @@ var ScrollieMixin = {
       verticalOffset: 0
     };
 
-    var options = extend(defaults, parameters)
+    var options = extend(defaults, parameters);
 
     return (
       <Scrollie options={options} dragging={dragging} autoScrollSpeed={autoScrollSpeed}>{component}</Scrollie>
