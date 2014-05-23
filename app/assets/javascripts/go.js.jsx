@@ -43,7 +43,7 @@ for (var i=101; i< 200; i++) {
   columns[1].items.push(i);
 }
 
-for (var i=201; i< 300; i++) {
+for (var i=201; i< 201; i++) {
   items.push({id: i, text: 'test item' + i});
   columns[2].items.push(i);
 }
