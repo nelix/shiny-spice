@@ -27,9 +27,7 @@ var Scrollie = React.createClass({
   },
 
   tick: function() {
-    if (this.props.autoScrollSpeed) {
-      this.scroll(this.props.autoScrollSpeed * 20);
-    }
+    this.props.autoScrollSpeed && this.scroll(this.props.autoScrollSpeed * 20);
     requestAnimationFrame(this.tick);
   },
 
@@ -90,7 +88,6 @@ var Scrollie = React.createClass({
     }
 
     this.setTrackingRatio();
-
     this.scrollieItemsHeight = scrollieItems.clientHeight;
     this.scrollieWrapperHeight = scrollieWrapper.clientHeight;
 
