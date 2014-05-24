@@ -48,7 +48,7 @@ var GrabieMouseMixin = {
 
   _handleGrabieMouseUp: function (e) {
     // temporary
-    $(document).unbind("mouseup", this._handleGrabieMouseUp);
+    $(document).off('mouseup', this._handleGrabieMouseUp);
 
     var oldGrabieMouse = this.state.grabieMouse;
     var initialGrabieMouse = $.extend({}, this.state.grabieMouse); // this can be changed to use ._clone()
@@ -97,7 +97,7 @@ var GrabieMouseMixin = {
 
   _handleGrabieMouseDown: function(e) {
     // This is some temporary disgusting way to make sure mouseUp is always called, so we can cancel events regardless
-    $(document).bind("mouseup", this._handleGrabieMouseUp);
+    $(document).on('mouseup', this._handleGrabieMouseUp);
 
     if (this._isLeftMouseButton(e)) {
       return;
