@@ -76,7 +76,7 @@ var StackieRectKeeperMixin = {
       this.handleSort(this.state.dragItemKey, this.state.overItemPosition, this.state.overColumnKey);
     }
 
-    this.setState({dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null});
+    this.setState({autoScrollSpeed:null, dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null});
   },
 
   handleItemRelease: function() {
