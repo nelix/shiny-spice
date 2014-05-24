@@ -1,13 +1,5 @@
 /** @jsx React.DOM */
 var autoScrollMixin = {
-  /*
-  getInitialState: function () {
-    return {
-
-    };
-  }, */
-
-
   autoScrollSpeed: function(dragging, mouseEvent, rect) {
     var distanceForScrollStart = 100;
 
@@ -25,7 +17,7 @@ var autoScrollMixin = {
       var speed = 1 - (mouseFromElementBottom / distanceForScrollStart);
     }
 
-    speed = dragging ? speed : 0;
-    return speed || null;
+    speed = dragging ? speed : null;
+    return speed;
   }
 }

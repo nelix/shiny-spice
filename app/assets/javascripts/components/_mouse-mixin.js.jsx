@@ -51,7 +51,6 @@ var GrabieMouseMixin = {
     $(document).off('mouseup', this._handleGrabieMouseUp);
 
     var oldGrabieMouse = this.state.grabieMouse;
-    var initialGrabieMouse = $.extend({}, this.state.grabieMouse); // this can be changed to use ._clone()
 
     if (this.state.grabieMouse.mouseDown) {
       oldGrabieMouse.mouseDown = false;
@@ -63,19 +62,13 @@ var GrabieMouseMixin = {
       oldGrabieMouse.dragging = false;
     }
 
-    // update grabieMouse
     this.setState({grabieMouse: oldGrabieMouse});
 
     velocity = new Array(5);
 
-    // Mouseup
     this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
 
-    // Drag release
-    if (initialGrabieMouse.dragging) {
-      this.handleGrabieDragRelease && this.handleGrabieDragRelease(this.state.grabieMouse);
-    }
-
+    this.handleGrabieDragRelease && this.handleGrabieDragRelease(this.state.grabieMouse);
     return false;
   },
 
@@ -103,12 +96,14 @@ var GrabieMouseMixin = {
       return;
     }
 
+    var oldGrabieMouse = this.state.grabieMouse;
+
     this.longDown = window.setTimeout(function() {
       oldGrabieMouse.mouseLongDown = true;
       this._handleGrabieMouseLongDown(e);
     }.bind(this), 200)
 
-    var oldGrabieMouse = this.state.grabieMouse;
+
     oldGrabieMouse.mouseDown = true;
     oldGrabieMouse.grabStartX = e.pageX;
     oldGrabieMouse.grabStartY = e.pageY;
