@@ -25,7 +25,8 @@ var Sprite = React.createClass({
     return {
       x: 0,
       y: 0,
-      v: 0
+      v: 0,
+      children: <div/>
     };
   },
 
@@ -44,7 +45,7 @@ var Sprite = React.createClass({
     if (transformProperty) {
       this.everWas3d = true;
       var vx = ((this.props.v.x) ?  Math.max(-30, Math.min(this.props.v.x, 30)) /5 : 0);
-      style[transformProperty] = translate(this.props.x, this.props.y) + ' rotate(' + vx + 'deg)';
+      style[transformProperty] = translate(this.props.x || 0, this.props.y || 0) + ' rotate(' + vx + 'deg)';
     } else {
       style.position = 'absolute';
       style.left = this.props.x;

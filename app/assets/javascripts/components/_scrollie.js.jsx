@@ -146,12 +146,6 @@ var Scrollie = React.createClass({
 
     var scrollbarOffset = this.state.scrollbarOffset + this.props.options.verticalOffset;
     if (this.state.scrollable) {
-      if (transformProperty) { // TODO: sprite
-        thumbStyle[transformProperty] = translate(0, scrollbarOffset);
-      } else {
-        thumbStyle.top = scrollbarOffset;
-      }
-
       return (
         <div ref="scrollieContainer" className={options.prefix + '-container' + (options.persistant ? options.prefix + '-on-hover' : '')} onScroll={this.handleScroll}>
           <div ref="scrollieWrapper" className={options.prefix + '-wrapper'} style={{right: this.state.nativeScrollbarWidth}}>
@@ -160,7 +154,7 @@ var Scrollie = React.createClass({
             </div>
           </div>
           <div className={options.prefix + '-scrollbar'}>
-            <div className={options.prefix + '-scrollbar-thumb'} style={thumbStyle} onMouseDown={this._handleGrabieMouseDown}></div>
+            <Sprite y={scrollbarOffset} style={thumbStyle} className={options.prefix + '-scrollbar-thumb'} onMouseDown={this._handleGrabieMouseDown}/>
             {this.state.grabieMouse.mouseDown && <Overlay onMouseUp={this._handleGrabieMouseUp} onMouseMove={this._handleGrabieMouseMove}/>}
           </div>
         </div>
