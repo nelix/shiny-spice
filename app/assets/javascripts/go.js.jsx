@@ -33,17 +33,17 @@ var items = [
   {id: 35, text: 'Space needle@?'}
 ];
 
-for (var i=36; i< 100; i++) {
+for (var i=36; i< 500; i++) {
   items.push({id: i, text: 'test item' + i});
   columns[0].items.push(i);
 }
 
-for (var i=101; i< 200; i++) {
+for (var i=501; i< 1000; i++) {
   items.push({id: i, text: 'test item' + i});
   columns[1].items.push(i);
 }
 
-for (var i=201; i< 201; i++) {
+for (var i=1001; i< 1201; i++) {
   items.push({id: i, text: 'test item' + i});
   columns[2].items.push(i);
 }
