@@ -68,8 +68,9 @@ var Scrollie = React.createClass({
     window.removeEventListener('resize', this.createScrollbar);
   },
 
-  getNativeScrollbarWidth: function(scrollableElement) {
-    return -Math.abs(scrollableElement.offsetWidth - scrollableElement.clientWidth);
+  getNativeScrollbarWidth: function() {
+    var el = this.refs.scrollieWrapper.getDOMNode();
+    return -Math.abs(el.offsetWidth - el.clientWidth);
   },
 
   handleScroll: function() {
@@ -92,12 +93,9 @@ var Scrollie = React.createClass({
   },
 
   updateScrollbar: function() {
-    var scrollieWrapper = this.refs.scrollieWrapper.getDOMNode();
-    var scrollieContainer = this.refs.scrollieContainer.getDOMNode();
-    var scrollieItems = this.refs.scrollieItems.getDOMNode();
-    var scrollbarHeight = (scrollieWrapper.clientHeight * (scrollieWrapper.clientHeight / scrollieItems.clientHeight)) - (this.props.options.verticalOffset * 2);
 
-    var pendingState = {};
+    var pendingState = this.state;
+
     var newScrollbarHeight = this.scrollbarHeight();
     if (this.state.scrollbarHeight !== newScrollbarHeight) {
       pendingState.scrollbarHeight = newScrollbarHeight;
@@ -108,13 +106,13 @@ var Scrollie = React.createClass({
       // Scrolls are required, check if they dont exist
       if (!this.state.scrollable) {
         pendingState.scrollable = true;
-        pendingState.nativeScrollbarWidth = this.getNativeScrollbarWidth(scrollieWrapper);
+        pendingState.nativeScrollbarWidth = this.getNativeScrollbarWidth();
       }
     } else if (this.state.scrollable) {
       pendingState.scrollable = false;
     }
 
-    Object.keys(pendingState).length && this.setState(pendingState);
+    this.setState(pendingState);
   },
 
   scroll: function(n) {
