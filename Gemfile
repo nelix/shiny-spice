@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
+
 ruby '2.0.0'
 
 gem 'rails', '4.1.0'
@@ -15,6 +17,8 @@ gem 'react-rails', '~> 1.0.0.pre', :github => 'reactjs/react-rails'
 gem 'bootstrap-sass'
 gem 'high_voltage'
 gem 'thin'
+
+gem 'rails-assets-fluxxor'
 
 group :development do
   gem 'spring'
