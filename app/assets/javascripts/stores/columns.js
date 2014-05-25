@@ -23,26 +23,49 @@ function findIndex(needle, haystack, attr) {
 
 var ColumnStore = Fluxxor.createStore({
   actions: {
-    'ADD_ITEM': 'handleAddItem',
-    'MOVE_ITME': 'handleMoveItem'
+    "ADD_COLUMN": "handleAddColumn",
+    "MOVE_ITEM": "handleMoveTask",
+    "ADD_ITEM":"handleAddTask",
   },
-
-  initialize: function() {
-    this.todos = [];
+  columns: [],
+  get: function(id){
+    for(var i =0; i< this.columns.length; i++){
+      if (this.columns[i].id == id){
+        return this.columns[i];
+      }
+    }
+    return null;
   },
-
-  handleAddItem: function(payload) {
-    this.todos.push({text: payload.text, id: payload.id, column_id: payload.column_id});
-    this.emit('change');
+  handleAddColumn: function(payload){
+    var column = this.get(payload.id);
+    if (column != null) {
+      this.emit("error");
+    } else {
+      this.columns.push(payload);
+    }
   },
-
-  handleMoveItem: function(payload) {
-    // TODO
+  handleAddTask: function(payload){
+    this.waitFor(["TaskStore"], function(taskstore){
+      var columnId = taskstore.get(payload.id).columnId;
+      this.get(columnId).tasks.push(payload.id);
+    }.bind(this));
   },
-
-  getState: function() {
-    return {
-      items: this.items
-    };
+  get: function(id){
+    for(var i =0; i< this.columns.length; i++){
+      if (this.columns[i].id == id){
+        return this.columns[i];
+      }
+    }
+    return null;
+  },
+  handleMoveTask: function(payload){
+    //id, columnId, position
+    var task = flux.Store("TaskStore").get(payload.id);
+    var i = this.get(task.columnId).tasks.indexOf(payload.task.id);
+    this.get(task.columnId).tasks.splice(i,1);
+    this.get(payload.columnId).tasks.splice(payload.position,0,payload.task.id);
+  },
+  getState: function(){
+    return this.columns;
   }
 });

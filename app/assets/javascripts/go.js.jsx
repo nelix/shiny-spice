@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var stores = {
-  ColumnStore: new ColumnStore()
+  ColumnStore: new ColumnStore(),
+  TaskStore: new TaskStore(),
 };
 
 var flux = new Fluxxor.Flux(stores, ColumnActions);
