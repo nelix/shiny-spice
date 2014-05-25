@@ -16,6 +16,8 @@
 //= require react
 //= require react_ujs
 
+//= require fluxxor
+
 //= require bootstrap
 
 //= require go
