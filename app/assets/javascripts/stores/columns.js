@@ -93,10 +93,13 @@ var ColumnStore = Fluxxor.createStore({
   },
   handleMoveTask: function(payload){
     //id, columnId, position
-    var task = flux.Store("TaskStore").get(payload.id);
-    var i = this.get(task.columnId).items.indexOf(payload.task.id);
-    this.get(task.columnId).items.splice(i,1);
-    this.get(payload.columnId).items.splice(payload.position,0,payload.task.id);
+    this.waitFor(["TaskStore"], function(taskstore){
+      var task = taskstore.get(payload.id);
+      var i = this.get(task.columnId).items.indexOf(payload.task.id);
+      this.get(task.columnId).items.splice(i,1);
+      this.get(payload.columnId).items.splice(payload.position,0,payload.task.id);
+    }.bind(this));
+    this.emit("change");
   },
   getState: function(){
     return this.columns;
