@@ -12,7 +12,7 @@ var i = 0;
 
 function addSomeItems() {
   flux.actions.addColumn(0, "column 1");
-  //setTimeout(flux.actions.addColumn.bind(1, "column 2"),1);
+  setTimeout(flux.actions.addColumn.bind(1, "column 2"),1);
   //setTimeout(flux.actions.addColumn.bind(2, "column 3"), 2);
   //setTimeout(flux.actions.addItem.bind("a task", i++, 0),3);
 }
@@ -44,13 +44,18 @@ var Application = React.createClass({
   render: function() {
     return (
       <div style={{height: "100%"}}>
-      <Boardie  columns={this.state.columns} items={this.state.items} itemBuilder={buildTest}/>
-        <form onSubmit={this.handleSubmitForm}>
-          <input ref="input" type="text" size="30" placeholder="New Item" />
-          <input type="submit" value="Add Item" />
-        </form>
+      <form onSubmit={this.handleSubmitForm}>
+        <input ref="input" type="text" size="30" placeholder="New Item" />
+        <input type="submit" value="Add Item" />
+      </form>
+      <Boardie onSort={this.handleSort} columns={this.state.columns} items={this.state.items} itemBuilder={buildTest}/>
       </div>
     );
+  },
+
+  handleSort: function(item, position, column) {
+    //debugger
+    this.getFlux().actions.moveItem(item, position, column)
   },
 
   handleSubmitForm: function(e) {
