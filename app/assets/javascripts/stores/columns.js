@@ -63,7 +63,7 @@ var ColumnStore = Fluxxor.createStore({
   },
 
   handleAddItem: function(payload) {
-    this.todos.push({text: payload.text, id: payload.id, column_id: payload.column_id});
+    this.todos.push({text: payload.text, id: payload.id, columnId: payload.columnId});
     this.emit('change');
   },
 
