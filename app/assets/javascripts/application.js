@@ -20,6 +20,6 @@
 
 //= require bootstrap
 
-//= require go
+//= require_tree ./stores
 
 //= require_tree .

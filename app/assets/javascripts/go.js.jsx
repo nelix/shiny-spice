@@ -1,4 +1,9 @@
 /** @jsx React.DOM */
+var stores = {
+  ColumnStore: new ColumnStore()
+};
+
+var flux = new Fluxxor.Flux(stores, ColumnActions);
 
 var columns = [
   {id: 2, title: 'hats', items: [4, 5, 6]},
