@@ -11,16 +11,20 @@ var StoreWatchMixin = Fluxxor.StoreWatchMixin;
 var i = 0;
 
 function addSomeItems() {
-  flux.actions.addItem({text:prompt(), id: i++, columnId: 0});
+  flux.actions.addColumn(0, "column 1");
+  //setTimeout(flux.actions.addColumn.bind(1, "column 2"),1);
+  //setTimeout(flux.actions.addColumn.bind(2, "column 3"), 2);
+  //setTimeout(flux.actions.addItem.bind("a task", i++, 0),3);
 }
-addSomeItems();
-addSomeItems();
+
+
 
 function buildTest(data) {
   return <TestBox key={data.id} text={data.text}/>;
 }
 
 function go() {
+  addSomeItems();
 React.renderComponent(
  <Application flux={flux}/>,
   document.body);
@@ -34,13 +38,13 @@ var Application = React.createClass({
     var flux = this.getFlux();
     // Normally we'd use one key per store, but we only have one store, so
     // we'll use the state of the store as our entire state here.
-    return flux.store('ColumnStore').getState();
+    return {"columns": flux.store('ColumnStore').getState(), items: flux.store('TaskStore').getState()};
   },
 
   render: function() {
     return (
-      <Boardie  columns={columns} items={items} itemBuilder={buildTest}/> ||
-      <div>
+      <div style={{height: "100%"}}>
+      <Boardie  columns={this.state.columns} items={this.state.items} itemBuilder={buildTest}/>
         <form onSubmit={this.handleSubmitForm}>
           <input ref="input" type="text" size="30" placeholder="New Item" />
           <input type="submit" value="Add Item" />
@@ -52,7 +56,7 @@ var Application = React.createClass({
   handleSubmitForm: function(e) {
     e.preventDefault();
     var node = this.refs.input.getDOMNode();
-    this.getFlux().actions.addItem(node.value);
+    this.getFlux().actions.addItem(node.value, i++, 0);
     node.value = '';
   }
 });

@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 
 var TestBox = React.createClass({
-  mixins: [Fluxxor.FluxChildMixin(React), Fluxxor.StoreWatchMixin('ItemStore')],
 
   randomColor: Math.floor(Math.random()*16777215).toString(16),
 

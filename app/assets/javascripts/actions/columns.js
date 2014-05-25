@@ -8,6 +8,6 @@ var ColumnActions = {
   },
 
   addColumn: function(id, name){
-    this.dispatch('ADD_COLUMN', {id: id, name: name, tasks:[]});
+    this.dispatch('ADD_COLUMN', {id: id, name: name, items:[]});
   }
 };

@@ -74,12 +74,14 @@ var ColumnStore = Fluxxor.createStore({
     } else {
       this.columns.push(payload);
     }
+    this.emit("change");
   },
   handleAddTask: function(payload){
     this.waitFor(["TaskStore"], function(taskstore){
       var columnId = taskstore.get(payload.id).columnId;
-      this.get(columnId).tasks.push(payload.id);
+      this.get(columnId).items.push(payload.id);
     }.bind(this));
+    this.emit("change");
   },
   get: function(id){
     for(var i =0; i< this.columns.length; i++){
@@ -92,9 +94,9 @@ var ColumnStore = Fluxxor.createStore({
   handleMoveTask: function(payload){
     //id, columnId, position
     var task = flux.Store("TaskStore").get(payload.id);
-    var i = this.get(task.columnId).tasks.indexOf(payload.task.id);
-    this.get(task.columnId).tasks.splice(i,1);
-    this.get(payload.columnId).tasks.splice(payload.position,0,payload.task.id);
+    var i = this.get(task.columnId).items.indexOf(payload.task.id);
+    this.get(task.columnId).items.splice(i,1);
+    this.get(payload.columnId).items.splice(payload.position,0,payload.task.id);
   },
   getState: function(){
     return this.columns;
