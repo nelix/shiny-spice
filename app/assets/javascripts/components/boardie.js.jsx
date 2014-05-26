@@ -154,7 +154,7 @@ var Boardie = React.createClass({
           key={column.id}
           onGrabieLongGrab={this.handleColumnGrab.bind(null, column.id)}
           onGrabieDragRelease={this.handleColumnRelease.bind(null, column.id)}
-          onMouseMove={this.state.columnDragging && this.handleColumnHover.bind(null, column.id, i)}
+          onMouseMove={(this.state.columnDragging || this.state.itemDragging) && this.handleColumnHover.bind(null, column.id, i)}
           onGrabieMove={this.state.columnDragging && this.handleIeHover}
           onMouseOut={this.handleColumnLeave}>
         <Stackable
