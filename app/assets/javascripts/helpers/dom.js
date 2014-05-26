@@ -43,9 +43,16 @@
       if (underlyingNodeList) {
         for (var i = 0; i < underlyingNodeList.length; i++) {
           if (window.getComputedStyle(underlyingNodeList[i]).getPropertyValue('pointer-events') !== 'none') {
-            var event = document.createEvent('HTMLEvents');
-            event.initEvent(eventName, true, true);
-            underlyingNodeList[i].dispatchEvent(event);            
+            var event = document.createEvent('MouseEvents');
+            event.initMouseEvent(
+              eventName,
+              true, false, window, 0,
+              mouseEvent.screenX, mouseEvent.screenY, mouseEvent.clientX, mouseEvent.clientY,
+              false, false, false, false,
+              0, null
+            );
+
+            underlyingNodeList[i].dispatchEvent(event);
             return underlyingNodeList[i];
           }
         }
