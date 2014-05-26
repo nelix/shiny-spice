@@ -8,7 +8,7 @@ var ColumnStore = Fluxxor.createStore({
   columns: [],
 
   get: function(id){
-    for(var i =0; i< this.columns.length; i++){
+    for(var i = 0; i< this.columns.length; i++){
       if (this.columns[i].id == id){
         return this.columns[i];
       }

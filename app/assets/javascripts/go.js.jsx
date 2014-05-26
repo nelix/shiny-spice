@@ -43,7 +43,6 @@ var Application = React.createClass({
   },
 
   render: function() {
-    console.log(this.state.columns)
     return (
       <div style={{height: "100%"}}>
       <form onSubmit={this.handleSubmitForm}>
