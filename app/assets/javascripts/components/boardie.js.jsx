@@ -70,11 +70,10 @@ var Boardie = React.createClass({
   },
 
   handleItemHover: function(columnKey, itemKey, position, mouseEvent) {
-    if (this.state.itemDragging && this.state.overItemKey !== itemKey) {
+    if (this.state.itemDragging) {
       var targetBoundingRect = getBounds(mouseEvent.target);
       var oldState = this.state;
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++;
-
       oldState.overItemKey = itemKey;
       oldState.overColumnKey = columnKey;
       oldState.overItemPosition = position;
