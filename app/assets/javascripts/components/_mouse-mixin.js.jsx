@@ -66,9 +66,8 @@ var GrabieMouseMixin = {
 
     velocity = new Array(5);
 
+    document.removeEventListener('mousemove', this._handleGrabieMouseMove);
     this.handleGrabieRelease && this.handleGrabieRelease(this.state.grabieMouse);
-
-    this.handleGrabieDragRelease && this.handleGrabieDragRelease(this.state.grabieMouse);
     return false;
   },
 
@@ -116,6 +115,7 @@ var GrabieMouseMixin = {
   },
 
   _handleGrabieMouseLongDown: function(e) {
+    document.addEventListener('mousemove', this._handleGrabieMouseMove); // Because we removed it from the overlay...
     this.handleGrabieLongGrab && this.handleGrabieLongGrab(this.state.grabieMouse);
   },
 
