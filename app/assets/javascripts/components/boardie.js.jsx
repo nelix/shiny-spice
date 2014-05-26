@@ -92,12 +92,6 @@ var Boardie = React.createClass({
     this.setState({autoScrollSpeed:null, dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false});
   },
 
-  handleIeHover: function(mouseEvent) {
-    // IE10 fix
-    var hoveredColumn = dispatchPointerEventsFallback(mouseEvent, 'mousemove');
-    hoveredColumn && this.setState({handleColumnHoverPosition: !mouseOverRightHalf(mouseEvent, getBounds(hoveredColumn))});
-  },
-
   handleColumnHover: function(columnKey, columnId, mouseEvent) {
     // Pop item into last position in column
     if (this.state.overColumnKey !== columnKey) {
@@ -106,12 +100,7 @@ var Boardie = React.createClass({
 
     var position = columnId;
 
-    if (this.state.handleColumnHoverPosition === false || this.state.handleColumnHoverLeft === true) {
-      stateLeft = this.state.handleColumnHoverPosition;
-    } else {
-      stateLeft = mouseOverRightHalf(mouseEvent, getBounds(mouseEvent.target));
-    }
-
+    var stateLeft = mouseOverRightHalf(mouseEvent, getBounds(mouseEvent.target));
     stateLeft && position++;
 
     this.setState({overColumnPosition: position});
@@ -151,8 +140,7 @@ var Boardie = React.createClass({
           key={column.id}
           onGrabieLongGrab={this.handleGrab.bind(null, 'column', column.id, null)}
           onGrabieRelease={this.handleColumnRelease.bind(null, column.id)}
-          onMouseMove={(this.state.columnDragging || this.state.itemDragging) && this.handleColumnHover.bind(null, column.id, i)}
-          onGrabieMove={this.state.columnDragging && this.handleIeHover}>
+          onMouseMove={(this.state.columnDragging || this.state.itemDragging) && this.handleColumnHover.bind(null, column.id, i)}>
         <Stackable
             overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition}
             placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}}
