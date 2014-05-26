@@ -21,7 +21,7 @@ var Scrollie = React.createClass({
 
   // Lifecycle
   componentDidMount: function() {
-    this.updateScrollbar();
+    this.updateScrollbar(this.scrollbarHeight());
     window.addEventListener('resize', this.updateScrollbar);
   },
 
@@ -34,7 +34,7 @@ var Scrollie = React.createClass({
 
     var newScrollbarHeight = this.scrollbarHeight();
     if (this.state.scrollbarHeight !== newScrollbarHeight) {
-      this.setState({scrollbarHeight: newScrollbarHeight});
+      this.updateScrollbar(newScrollbarHeight);
     }
 
   },
@@ -92,11 +92,11 @@ var Scrollie = React.createClass({
     }
   },
 
-  updateScrollbar: function() {
+  updateScrollbar: function(scrollHeight) {
 
     var pendingState = this.state;
 
-    var newScrollbarHeight = this.scrollbarHeight();
+    var newScrollbarHeight = scrollHeight;
     if (this.state.scrollbarHeight !== newScrollbarHeight) {
       pendingState.scrollbarHeight = newScrollbarHeight;
     }
