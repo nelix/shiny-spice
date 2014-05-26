@@ -79,11 +79,8 @@ var GrabieMouseMixin = {
     this.setState({grabieMouse: oldGrabieMouse});
     if (oldGrabieMouse.mouseLongDown) {this._handleGrabieMouseDrag()}
 
-    console.log(e.target)
-    if ( !e.derp ) {
-      console.log(e.derp)
-      dispatchPointerEventsFallback(e, 'mousemove');
-    }
+  
+    dispatchPointerEventsFallback(e, 'mousemove');
 
 
     this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse, velocityR());

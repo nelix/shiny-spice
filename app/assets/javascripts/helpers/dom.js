@@ -37,25 +37,25 @@
 
   var dispatchPointerEventsFallback = pointerEventsAvailable ? function() {} :  function(mouseEvent, eventName) {
     // IE10
-    if (msPointerEventsMethod) {
+
+    if (msPointerEventsMethod && !mouseEvent.synthetic) {
       var underlyingNodeList = document.msElementsFromPoint(mouseEvent.pageX, mouseEvent.pageY);
 
       if (underlyingNodeList) {
         for (var i = 0; i < underlyingNodeList.length; i++) {
           if (window.getComputedStyle(underlyingNodeList[i]).getPropertyValue('pointer-events') !== 'none') {
-            /*
-            var event = document.createEvent('MouseEvents');
-            event.initMouseEvent(
-              eventName,
-              true, false, window, 0,
-              mouseEvent.screenX, mouseEvent.screenY, mouseEvent.clientX, mouseEvent.clientY,
-              false, false, false, false,
-              0, null
-            );*/
-            console.log('customer!')
-            mouseEvent['derp'] = true
-            var event = new CustomEvent(eventName, mouseEvent);
+            var event = document.createEvent('CustomEvent');
 
+            //var e = {synthetic: true, screenX: mouseEvent.screenX, screenY: mouseEvent.screenY, clientX:mouseEvent.clientX, clientY: mouseEvent.clientY,
+
+            event.initCustomEvent('mousemove', true, true, {});
+            event.synthetic = true;
+            event.screenX = mouseEvent.screenX;
+            event.screenY = mouseEvent.screenY;
+            event.clientX = mouseEvent.clientX;
+            event.clientY = mouseEvent.clientY;
+            event.pageX = mouseEvent.pageX;
+            event.pageY = mouseEvent.pageY;
             underlyingNodeList[i].dispatchEvent(event);
             return underlyingNodeList[i];
           }
