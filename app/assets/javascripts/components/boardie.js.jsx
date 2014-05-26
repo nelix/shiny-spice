@@ -51,7 +51,8 @@ var Boardie = React.createClass({
       overItemKey: null,
       overItemPosition: null,
       overColumnKey: null,
-      itemDragging: false
+      itemDragging: false,
+      autoScrollSpeed: null
     };
   },
 
@@ -69,27 +70,26 @@ var Boardie = React.createClass({
   },
 
   handleItemHover: function(columnKey, itemKey, position, mouseEvent) {
-    if (this.state.itemDragging) {
+    if (this.state.itemDragging && this.state.overItemKey !== itemKey) {
       var targetBoundingRect = getBounds(mouseEvent.target);
+      var oldState = this.state;
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++;
 
-      this.setState({
-        overItemKey: itemKey,
-        overColumnKey: columnKey,
-        overItemPosition: position,
-        autoScrollSpeed: this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()))
-      });
+      oldState.overItemKey = itemKey;
+      oldState.overColumnKey = columnKey;
+      oldState.overItemPosition = position;
+      oldState.autoScrollSpeed = this.autoScrollSpeed(this.state.itemDragging, mouseEvent, getBounds(this.getDOMNode()));
+      this.setState(oldState);
     }
   },
 
-  handleItemDrop: function(key) {
+  handleItemDrop: function(key) { //wtf
     if (this.state.dragItemKey !== false && this.state.overItemPosition !== false &&
         this.state.overColumnKey !== false && this.state.overItemPosition !== null) {
 
       this.handleSort(this.state.dragItemKey, this.state.overItemPosition, this.state.overColumnKey);
     }
-
-    this.setState({autoScrollSpeed:null, dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false});
+    this.setState(this.getInitialState());
   },
 
   handleColumnHover: function(columnKey, columnId, mouseEvent) {
@@ -97,7 +97,6 @@ var Boardie = React.createClass({
     if (this.state.overColumnKey !== columnKey) {
       this.setState({overColumnKey: columnKey, overItemPosition: this.props.columns[columnId].items.length+1});
     }
-
     var position = columnId;
 
     var stateLeft = mouseOverRightHalf(mouseEvent, getBounds(mouseEvent.target));
@@ -107,24 +106,22 @@ var Boardie = React.createClass({
   },
 
   handleGrab: function(thing, columnId, itemId, position, width, height) {
+    var oldState = this.state;
     if (thing == 'column') {
-      this.setState({
-        columnDragging: true,
-        dragColumnKey: columnId,
-        overColumnPosition: position,
-        dragColumnWidth: width,
-        dragColumnHeight: height
-      });
+      oldState.columnDragging = true;
+      oldState.dragColumnKey = columnId;
+      oldState.overColumnPosition = position;
+      oldState.dragColumnWidth = width;
+      oldState.dragColumnHeight = height;
     } else {
-      this.setState({
-        itemDragging: true,
-        dragItemKey: itemId,
-        overItemPosition: position,
-        overColumnKey: columnId,
-        dragItemWidth: width,
-        dragItemHeight: height
-      });
+      oldState.itemDragging = true;
+      oldState.dragItemKey = itemId;
+      oldState.overItemPosition = position;
+      oldState.overColumnKey = columnId;
+      oldState.dragItemWidth = width;
+      oldState.dragItemHeight =  height;
     }
+    this.setState(oldState);
   },
 
   handleColumnRelease: function() {
