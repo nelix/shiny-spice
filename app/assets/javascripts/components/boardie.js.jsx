@@ -46,9 +46,11 @@ var StackieRectKeeperMixin = {
   },
 
   handleItemHover: function(columnKey, itemKey, position, mouseEvent) {
+    // TODO: lots of getbounds here.. :()
     if (this.state.itemDragging) {
       var targetBoundingRect = getBounds(mouseEvent.target);
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++;
+
       this.setState({
         overItemKey: itemKey,
         overColumnKey: columnKey,
@@ -115,7 +117,7 @@ var Boardie = React.createClass({
   handleColumnHover: function(columnKey, columnId, mouseEvent) {
     // Pop item into last position in column
     if (this.state.overColumnKey !== columnKey) {
-      this.setState({overColumnKey: columnKey, overItemPosition: columns[columnId].items.length+1});
+      this.setState({overColumnKey: columnKey, overItemPosition: this.props.columns[columnId].items.length+1});
     }
 
     var position = columnId;
