@@ -52,7 +52,7 @@
               false, false, false, false,
               0, null
             );*/
-            consoole.log('customer!')
+            console.log('customer!')
             e['derp'] = true
             var event = new CustomEvent(eventName, e);
 
