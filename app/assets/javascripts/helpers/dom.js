@@ -43,6 +43,7 @@
       if (underlyingNodeList) {
         for (var i = 0; i < underlyingNodeList.length; i++) {
           if (window.getComputedStyle(underlyingNodeList[i]).getPropertyValue('pointer-events') !== 'none') {
+            /*
             var event = document.createEvent('MouseEvents');
             event.initMouseEvent(
               eventName,
@@ -50,7 +51,10 @@
               mouseEvent.screenX, mouseEvent.screenY, mouseEvent.clientX, mouseEvent.clientY,
               false, false, false, false,
               0, null
-            );
+            );*/
+            consoole.log('customer!')
+            e['derp'] = true
+            var event = new CustomEvent(eventName, e);
 
             underlyingNodeList[i].dispatchEvent(event);
             return underlyingNodeList[i];
