@@ -31,12 +31,12 @@ var Scrollie = React.createClass({
     } else {
       cancelAnimationFrame(this.animationFrame);
     }
-
-    var newScrollbarHeight = this.scrollbarHeight();
-    if (this.state.scrollbarHeight !== newScrollbarHeight) {
-      this.setState({scrollbarHeight: newScrollbarHeight});
+    if(prevProps.hash != this.props.hash) {
+      var newScrollbarHeight = this.scrollbarHeight();
+      if (this.state.scrollbarHeight !== newScrollbarHeight) {
+        this.setState({scrollbarHeight: newScrollbarHeight});
+      }
     }
-
   },
 
   scrollbarHeight: function() {

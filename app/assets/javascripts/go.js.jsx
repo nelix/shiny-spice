@@ -2,13 +2,14 @@
 var stores = {
   ColumnStore: new ColumnStore(),
   TaskStore: new TaskStore(),
+  ColumnHeightStore: new ColumnHeightStore(),
 };
 
 var flux = new Fluxxor.Flux(stores, ColumnActions);
 
 var FluxMixin = Fluxxor.FluxMixin(React);
 var StoreWatchMixin = Fluxxor.StoreWatchMixin;
-var i = 0;
+var ii = 0;
 
 function addSomeItems() {
   flux.actions.addColumn(0, "column 1");
@@ -38,7 +39,7 @@ var Application = React.createClass({
     var flux = this.getFlux();
     // Normally we'd use one key per store, but we only have one store, so
     // we'll use the state of the store as our entire state here.
-    return {"columns": flux.store('ColumnStore').getState(), items: flux.store('TaskStore').getState()};
+    return {"columnHashes": flux.store('ColumnHeightStore').getState(),"columns": flux.store('ColumnStore').getState(), items: flux.store('TaskStore').getState()};
   },
 
   render: function() {
@@ -49,7 +50,7 @@ var Application = React.createClass({
         <input ref="input" type="text" size="30" placeholder="New Item" />
         <input type="submit" value="Add Item" />
       </form>
-      <Boardie onSort={this.handleSort} columns={this.state.columns} items={this.state.items} itemBuilder={buildTest}/>
+      <Boardie onSort={this.handleSort} columnHashes={this.state.columnHashes} columns={this.state.columns} items={this.state.items} itemBuilder={buildTest}/>
       </div>
     );
   },
@@ -62,7 +63,7 @@ var Application = React.createClass({
   handleSubmitForm: function(e) {
     e.preventDefault();
     var node = this.refs.input.getDOMNode();
-    this.getFlux().actions.addItem(node.value, i++, 0);
+    this.getFlux().actions.addItem(node.value, ii++, 0);
     node.value = '';
   }
 });
