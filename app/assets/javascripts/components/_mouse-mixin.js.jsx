@@ -78,6 +78,7 @@ var GrabieMouseMixin = {
     addToV({x: e.pageX, y:e.pageY})
     this.setState({grabieMouse: oldGrabieMouse});
     if (oldGrabieMouse.mouseLongDown) {this._handleGrabieMouseDrag()}
+    dispatchPointerEventsFallback(e, 'mousemove');
     this.handleGrabieMove  && this.handleGrabieMove(e, this.state.grabieMouse, velocityR());
     return false;
   },

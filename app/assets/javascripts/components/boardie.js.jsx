@@ -36,13 +36,39 @@ function mouseOverRightHalf(e, rect) {
   return !isLeft;
 }
 
-var StackieRectKeeperMixin = {
+var Boardie = React.createClass({
+
+  mixins: [autoScrollMixin],
+
   getInitialState: function() {
-    return {dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false};
+    return {
+      dragColumnKey: null,
+      overColumnPosition: null,
+      dragColumnWidth: 0,
+      dragColumnHeight: 0,
+
+      dragItemKey: null,
+      overItemKey: null,
+      overItemPosition: null,
+      overColumnKey: null,
+      itemDragging: false
+    };
+  },
+
+  getItems: function(ids) {
+    return ids.map(
+      function(id) {
+        var item = find(id, this.props.items)
+        return this.props.itemBuilder ? this.props.itemBuilder(item) : item;
+      },this
+    );
+  },
+
+  handleSort: function(itemId, position, columnId) {
+    this.props.onSort(itemId, position, columnId);
   },
 
   handleItemHover: function(columnKey, itemKey, position, mouseEvent) {
-    dispatchPointerEventsFallback(mouseEvent, 'mousemove');
     if (this.state.itemDragging) {
       var targetBoundingRect = getBounds(mouseEvent.target);
       mouseOverBottomHalf(mouseEvent, targetBoundingRect) && position++;
@@ -64,29 +90,6 @@ var StackieRectKeeperMixin = {
     }
 
     this.setState({autoScrollSpeed:null, dragItemKey: null, overItemKey: null, overItemPosition: null, overColumnKey: null, itemDragging: false});
-  }
-};
-
-
-var Boardie = React.createClass({
-
-  mixins: [StackieRectKeeperMixin, autoScrollMixin],
-
-  getInitialState: function() {
-    return {dragColumnKey: null, overColumnPosition: null, dragColumnWidth: 0, dragColumnHeight: 0}
-  },
-
-  getItems: function(ids) {
-    return ids.map(
-      function(id) {
-        var item = find(id, this.props.items)
-        return this.props.itemBuilder ? this.props.itemBuilder(item) : item;
-      },this
-    );
-  },
-
-  handleSort: function(itemId, position, columnId) {
-    this.props.onSort(itemId, position, columnId);
   },
 
   handleIeHover: function(mouseEvent) {
