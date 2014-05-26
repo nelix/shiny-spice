@@ -53,8 +53,8 @@
               0, null
             );*/
             console.log('customer!')
-            e['derp'] = true
-            var event = new CustomEvent(eventName, e);
+            mouseEvent['derp'] = true
+            var event = new CustomEvent(eventName, mouseEvent);
 
             underlyingNodeList[i].dispatchEvent(event);
             return underlyingNodeList[i];
