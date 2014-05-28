@@ -13,7 +13,7 @@ var ii = 0;
 
 function addSomeItems() {
   flux.actions.addColumn(0, "column 1");
-  setTimeout(flux.actions.addColumn.bind(1, "column 2"),1);
+  setTimeout(flux.actions.addColumn.bind(this,1, "column 2"),1);
   //setTimeout(flux.actions.addColumn.bind(2, "column 3"), 2);
   //setTimeout(flux.actions.addItem.bind("a task", i++, 0),3);
 }
@@ -33,7 +33,7 @@ React.renderComponent(
 
 
 var Application = React.createClass({
-  mixins: [FluxMixin, StoreWatchMixin('ColumnStore')],
+  mixins: [FluxMixin, StoreWatchMixin('ColumnStore', 'ColumnHeightStore')],
 
   getStateFromFlux: function() {
     var flux = this.getFlux();

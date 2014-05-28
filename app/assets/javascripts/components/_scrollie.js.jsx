@@ -31,11 +31,11 @@ var Scrollie = React.createClass({
     } else {
       cancelAnimationFrame(this.animationFrame);
     }
-    
-    if(prevProps.hash != this.props.hash) {
+
+    if(prevProps.hash != this.props.hash){
       var newScrollbarHeight = this.scrollbarHeight();
       if (this.state.scrollbarHeight !== newScrollbarHeight) {
-        this.setState({scrollbarHeight: newScrollbarHeight});
+        this.updateScrollbar(newScrollbarHeight);
       }
     }
   },
@@ -187,7 +187,7 @@ var ScrollieMixin = {
     var options = extend(defaults, parameters);
 
     return (
-      <Scrollie options={options} dragging={dragging} autoScrollSpeed={autoScrollSpeed}>{component}</Scrollie>
+      <Scrollie hash={this.props.hash} options={options} dragging={dragging} autoScrollSpeed={autoScrollSpeed}>{component}</Scrollie>
     );
   }
 }

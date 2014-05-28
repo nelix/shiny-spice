@@ -138,7 +138,7 @@ var Boardie = React.createClass({
           onGrabieRelease={this.handleColumnRelease.bind(null, column.id)}
           onMouseMove={(this.state.columnDragging || this.state.itemDragging) && this.handleColumnHover.bind(null, column.id, i)}>
         <Stackable
-            hash={this.props.columnHashes[column.id]}
+            hash={this.props.columnHashes[i]}
             overItemPosition={this.state.overColumnKey === column.id && this.state.overItemPosition}
             placeholderStyle={{height: this.state.dragItemHeight, width: this.state.dragItemWidth}}
             overItemKey={this.state.overColumnKey === column.id && this.state.overItemKey} key={column.id}
